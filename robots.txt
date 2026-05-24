@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# サイトマップ
+Sitemap: https://ouchi-de-cinema.com/sitemap.xml
+
+# AI クローラーへの許可（AIEO対応）
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
