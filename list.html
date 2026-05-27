@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">映画リスト | オウチ de cinema</title>
+<meta name="description" id="pageDesc" content="映画2,479本を自宅で観続けた映画愛好家によるリアルなレビュー一覧。">
+<meta name="robots" content="index, follow">
+<link rel="canonical" id="canonical" href="https://ouchi-de-cinema.com/list">
+<script type="application/ld+json" id="jsonld">{}</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050f;--s1:#0a0a1e;--s2:#101028;--s3:#16163a;--bd:#1e1e3c;--bd2:#2c2c50;--gold:#c8a853;--gb:#e8c878;--gd:#7a6030;--tx:#f4f0e4;--sub:#a0a0c4;--dim:#505080;--acc:#6c63ff;--grn:#34d399;--red:#f87171;--pk:#f472b6;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:'Noto Serif JP',serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(5,5,15,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:calc(var(--safe-t)+10px) 15px 10px;display:flex;align-items:center;gap:10px}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);flex:1}
+.nav-home{font-size:11px;color:var(--dim);padding:5px 10px;border:1px solid var(--bd);border-radius:16px}
+
+/* ── LIST VIEW ── */
+#listView{display:block}
+.list-header{padding:16px 15px 0}
+.list-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.list-title em{font-style:italic;color:var(--gold)}
+.list-count{font-size:11px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:14px}
+
+/* Search */
+.search-wrap{position:relative;margin:0 15px 10px}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:13px;pointer-events:none}
+.search{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:10px 11px 10px 33px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:15px;outline:none;-webkit-appearance:none}
+.search::placeholder{color:var(--dim)}
+.search:focus{border-color:var(--gd)}
+
+/* Filter chips */
+.chips{display:flex;gap:5px;padding:0 15px 10px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:4px 11px;border-radius:16px;border:1px solid var(--bd);font-size:10px;color:var(--dim);cursor:pointer;font-family:'Noto Serif JP',serif;background:transparent;transition:all .15s;white-space:nowrap}
+.chip.on{background:rgba(200,168,83,.12);border-color:rgba(200,168,83,.3);color:var(--gold)}
+
+/* Movie cards */
+.movies{padding:0 12px;display:flex;flex-direction:column;gap:6px}
+.mcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;animation:fu .2s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.mcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;background:linear-gradient(180deg,transparent,var(--gold),transparent);transition:opacity .15s}
+.mcard:active{background:var(--s2);transform:scale(.985)}
+.mcard.has-star::before{opacity:1}
+.mcard-num{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:2px}
+.mcard-title{font-size:14px;font-weight:500;color:var(--tx);line-height:1.45;margin-bottom:4px}
+.mcard-desc{font-size:11px;color:var(--sub);line-height:1.6;font-weight:300;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mcard-footer{display:flex;align-items:center;gap:6px;margin-top:7px}
+.tag-star{font-size:9px;color:var(--gold)}
+.tag-yt{font-size:9px;padding:2px 7px;border-radius:7px;background:rgba(200,168,83,.1);border:1px solid rgba(200,168,83,.2);color:var(--gold)}
+
+/* Pager */
+.pager{padding:14px 12px calc(var(--safe-b)+20px);display:flex;align-items:center;justify-content:center;gap:8px}
+.pg-btn{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:10px 16px;color:var(--sub);font-size:13px;cursor:pointer;font-family:'Noto Serif JP',serif}
+.pg-btn:active{color:var(--gold)}
+.pg-btn:disabled{opacity:.25;pointer-events:none}
+.pg-inf{font-size:11px;color:var(--dim);font-family:'JetBrains Mono',monospace;min-width:60px;text-align:center}
+
+/* ── DETAIL VIEW ── */
+#detailView{display:none}
+.detail-back{padding:calc(var(--safe-t)+56px) 15px 0}
+.detail-back a{font-size:12px;color:var(--dim);display:inline-flex;align-items:center;gap:5px}
+.detail-body{padding:16px 15px}
+.detail-num{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:5px}
+.detail-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:14px;color:var(--tx)}
+.detail-title em{font-style:italic;color:var(--gold)}
+
+/* Review card */
+.review-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:16px;margin-bottom:14px}
+.review-label{font-size:10px;color:var(--dim);letter-spacing:.1em;margin-bottom:10px}
+.review-text{font-size:14px;color:var(--sub);line-height:1.95;font-weight:300;white-space:pre-wrap}
+
+/* Action buttons */
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.action-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;border-radius:11px;font-size:13px;font-family:'Noto Serif JP',serif;border:1px solid;cursor:pointer;transition:all .15s;text-decoration:none}
+.action-btn:active{transform:scale(.96)}
+.btn-yt{background:rgba(200,168,83,.1);border-color:rgba(200,168,83,.28);color:var(--gold)}
+.btn-unext{background:rgba(108,99,255,.1);border-color:rgba(108,99,255,.28);color:#a5b4fc}
+.btn-amazon{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.25);color:#fed7aa}
+.btn-share{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25);color:var(--grn)}
+
+/* Navigation */
+.nav-prev-next{display:flex;gap:8px;margin-bottom:14px}
+.nav-btn{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:11px 12px;cursor:pointer;transition:all .15s}
+.nav-btn:active{background:var(--s2)}
+.nav-btn-label{font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:3px}
+.nav-btn-title{font-size:12px;color:var(--tx);font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(var(--safe-b)+24px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--s3);border:1px solid var(--bd2);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--tx);opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-logo" onclick="showList()" style="cursor:pointer">オウチ de cinema</span>
+  <a href="/" class="nav-home">← トップへ</a>
+</nav>
+
+<!-- ── LIST VIEW ── -->
+<div id="listView">
+  <div class="list-header">
+    <h1 class="list-title">映画<em>リスト</em></h1>
+    <div class="list-count" id="listCount">読み込み中…</div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input class="search" id="si" type="search" placeholder="タイトル・キーワードで検索…" oninput="onSearch()" autocorrect="off" spellcheck="false">
+  </div>
+  <div class="chips">
+    <button class="chip on" data-f="all" onclick="setFilter(this)">すべて</button>
+    <button class="chip" data-f="star" onclick="setFilter(this)">⭐ お気に入り</button>
+    <button class="chip" data-f="yt" onclick="setFilter(this)">▶ 予告あり</button>
+    <button class="chip" data-f="new" onclick="setFilter(this)">🆕 最新順</button>
+  </div>
+  <div class="movies" id="movieList"></div>
+  <div class="pager">
+    <button class="pg-btn" id="pgPrev" onclick="prevPage()">← 前へ</button>
+    <span class="pg-inf" id="pgInf"></span>
+    <button class="pg-btn" id="pgNext" onclick="nextPage()">次へ →</button>
+  </div>
+</div>
+
+<!-- ── DETAIL VIEW ── -->
+<div id="detailView">
+  <div class="detail-back"><a href="#" onclick="showList();return false">← 一覧に戻る</a></div>
+  <div class="detail-body">
+    <div class="detail-num" id="dNum"></div>
+    <h1 class="detail-title" id="dTitle"></h1>
+    <div class="review-card">
+      <div class="review-label">MY REVIEW</div>
+      <div class="review-text" id="dDesc"></div>
+    </div>
+    <div class="action-grid">
+      <a class="action-btn btn-yt" id="dYt" href="#" target="_blank" rel="noopener">▶ 予告動画</a>
+      <a class="action-btn btn-unext" id="dUnext" href="#" target="_blank" rel="noopener">U-NEXT で観る</a>
+      <a class="action-btn btn-amazon" id="dAmazon" href="#" target="_blank" rel="noopener">Amazon で観る</a>
+      <button class="action-btn btn-share" onclick="shareMovie()">📤 シェア</button>
+    </div>
+    <div class="nav-prev-next">
+      <div class="nav-btn" id="navPrev" onclick="navigateMovie(-1)">
+        <div class="nav-btn-label">← 前の作品</div>
+        <div class="nav-btn-title" id="navPrevTitle">—</div>
+      </div>
+      <div class="nav-btn" id="navNext" onclick="navigateMovie(1)" style="text-align:right">
+        <div class="nav-btn-label">次の作品 →</div>
+        <div class="nav-btn-title" id="navNextTitle">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let MOVIES = [];
+let filtered = [];
+let page = 0;
+let flt = 'all';
+let q = '';
+const PER = 30;
+
+// Load movies.json
+fetch('movies.json')
+  .then(r => r.json())
+  .then(data => {
+    MOVIES = data;
+    filtered = [...MOVIES].reverse();
+    checkURL();
+  })
+  .catch(e => {
+    document.getElementById('listCount').textContent = 'データ読み込みエラー';
+  });
+
+// URL routing
+function checkURL() {
+  const params = new URLSearchParams(window.location.search);
+  const n = params.get('n');
+  if (n) {
+    const movie = MOVIES.find(m => m.n === parseInt(n));
+    if (movie) { showDetail(movie); return; }
+  }
+  showList();
+}
+
+// ── LIST ──
+function showList() {
+  document.getElementById('listView').style.display = 'block';
+  document.getElementById('detailView').style.display = 'none';
+  history.pushState({}, '', '/list');
+  document.getElementById('pageTitle').textContent = '映画リスト | オウチ de cinema';
+  renderList();
+}
+
+function renderList() {
+  const total = filtered.length;
+  const pages = Math.max(1, Math.ceil(total / PER));
+  if (page >= pages) page = pages - 1;
+  const slice = filtered.slice(page * PER, (page + 1) * PER);
+
+  document.getElementById('listCount').textContent =
+    `${total.toLocaleString()} 作品 / 全 ${MOVIES.length.toLocaleString()} 本`;
+  document.getElementById('pgInf').textContent = `${page+1} / ${pages}`;
+  document.getElementById('pgPrev').disabled = page === 0;
+  document.getElementById('pgNext').disabled = page >= pages - 1;
+
+  document.getElementById('movieList').innerHTML = slice.map((m, i) => {
+    const hasStar = m.s;
+    const hasYt = m.yt === 'd';
+    return `<div class="mcard ${hasStar?'has-star':''}" onclick="showDetail(MOVIES.find(x=>x.n===${m.n}))" style="animation-delay:${i*8}ms">
+      <div class="mcard-num">第 ${m.n} 作品</div>
+      <div class="mcard-title">${esc(m.t)}</div>
+      ${m.d ? `<div class="mcard-desc">${esc(m.d)}</div>` : ''}
+      <div class="mcard-footer">
+        ${hasStar ? '<span class="tag-star">⭐ お気に入り</span>' : ''}
+        ${hasYt ? '<span class="tag-yt">▶ 予告あり</span>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let stimer;
+function onSearch() {
+  clearTimeout(stimer);
+  stimer = setTimeout(() => {
+    q = document.getElementById('si').value.trim().toLowerCase();
+    applyFilter();
+  }, 160);
+}
+
+function setFilter(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  flt = el.dataset.f;
+  applyFilter();
+}
+
+function applyFilter() {
+  let d = [...MOVIES];
+  if (flt === 'new') { d = d.reverse(); }
+  else { d = d.reverse(); }
+  if (flt === 'star') d = d.filter(m => m.s);
+  if (flt === 'yt')   d = d.filter(m => m.yt === 'd');
+  if (q) d = d.filter(m => m.t.toLowerCase().includes(q) || (m.d||'').toLowerCase().includes(q));
+  filtered = d;
+  page = 0;
+  renderList();
+}
+
+function prevPage() { if(page>0){page--;renderList();window.scrollTo({top:0,behavior:'smooth'});} }
+function nextPage() { const p=Math.ceil(filtered.length/PER)-1; if(page<p){page++;renderList();window.scrollTo({top:0,behavior:'smooth'});} }
+
+// ── DETAIL ──
+function showDetail(movie) {
+  if (!movie) return;
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'block';
+  window.scrollTo({top:0,behavior:'instant'});
+
+  // Update URL & SEO
+  history.pushState({}, '', `/list?n=${movie.n}`);
+  const seoTitle = `映画『${movie.t}』レビュー｜第${movie.n}作品【オウチ de cinema】`;
+  document.getElementById('pageTitle').textContent = seoTitle;
+  document.getElementById('pageDesc').content =
+    `映画『${movie.t}』の感想・レビュー。${(movie.d||'').substring(0,80)}`;
+  document.getElementById('canonical').href = `https://ouchi-de-cinema.com/list?n=${movie.n}`;
+
+  // JSON-LD
+  const ld = {
+    "@context":"https://schema.org",
+    "@type":"Review",
+    "itemReviewed":{"@type":"Movie","name":movie.t},
+    "reviewBody": movie.d || '',
+    "author":{"@type":"Person","name":"オウチ de cinema"},
+    "url":`https://ouchi-de-cinema.com/list?n=${movie.n}`
+  };
+  document.getElementById('jsonld').textContent = JSON.stringify(ld);
+
+  // Content
+  document.getElementById('dNum').textContent = `第 ${movie.n} 作品`;
+  document.getElementById('dTitle').textContent = movie.t;
+  document.getElementById('dDesc').textContent = movie.d || '（感想を準備中です）';
+
+  // Action buttons
+  document.getElementById('dYt').href = movie.y || '#';
+  document.getElementById('dYt').textContent = movie.yt === 'd' ? '▶ 予告動画' : '🔍 予告を検索';
+  document.getElementById('dUnext').href =
+    `https://video.unext.jp/search?query=${encodeURIComponent(movie.t)}`;
+  document.getElementById('dAmazon').href =
+    `https://www.amazon.co.jp/s?k=${encodeURIComponent(movie.t+'映画')}&tag=YOUR_AFFILIATE_TAG`;
+
+  // Prev / Next
+  const idx = MOVIES.findIndex(m => m.n === movie.n);
+  const prev = MOVIES[idx - 1];
+  const next = MOVIES[idx + 1];
+  document.getElementById('navPrevTitle').textContent = prev ? prev.t : '—';
+  document.getElementById('navNextTitle').textContent = next ? next.t : '—';
+  document.getElementById('navPrev').onclick = prev ? () => showDetail(prev) : null;
+  document.getElementById('navNext').onclick = next ? () => showDetail(next) : null;
+  document.getElementById('navPrev').style.opacity = prev ? '1' : '0.3';
+  document.getElementById('navNext').style.opacity = next ? '1' : '0.3';
+}
+
+function navigateMovie(dir) {
+  const titleEl = dir === -1 ? 'navPrevTitle' : 'navNextTitle';
+  const title = document.getElementById(titleEl).textContent;
+  const movie = MOVIES.find(m => m.t === title);
+  if (movie) showDetail(movie);
+}
+
+function shareMovie() {
+  const url = window.location.href;
+  const title = document.getElementById('dTitle').textContent;
+  if (navigator.share) {
+    navigator.share({ title: `映画『${title}』| オウチ de cinema`, url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast('🔗 URLをコピーしました'));
+  }
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function showToast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// Handle browser back button
+window.addEventListener('popstate', () => checkURL());
+</script>
+</body>
+</html>

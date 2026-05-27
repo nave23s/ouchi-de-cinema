@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>新作追加ツール | オウチ de cinema</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050f;--s1:#0a0a1e;--s2:#101028;--bd:#1e1e3c;--bd2:#2c2c50;--gold:#c8a853;--gb:#e8c878;--gd:#7a6030;--tx:#f4f0e4;--sub:#a0a0c4;--dim:#505080;--acc:#6c63ff;--grn:#34d399;--red:#f87171;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:'Noto Serif JP',serif;min-height:100vh}
+.nav{padding:calc(var(--safe-t)+12px) 15px 12px;background:rgba(5,5,15,.97);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);flex:1}
+.body{padding:16px 15px calc(var(--safe-b)+20px);display:flex;flex-direction:column;gap:12px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;overflow:hidden}
+.card-h{padding:12px 14px 10px;border-bottom:1px solid var(--bd);font-size:14px;font-weight:600;color:var(--tx)}
+.card-b{padding:13px 14px;display:flex;flex-direction:column;gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field-label{font-size:11px;color:var(--sub);letter-spacing:.06em}
+.field-input{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:15px;outline:none;-webkit-appearance:none;width:100%}
+.field-input:focus{border-color:var(--gd)}
+.field-ta{min-height:120px;resize:none;line-height:1.8}
+.star-row{display:flex;align-items:center;gap:10px}
+.star-label{font-size:13px;color:var(--sub)}
+.star-toggle{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:7px 14px;font-size:12px;color:var(--dim);cursor:pointer;font-family:'Noto Serif JP',serif;transition:all .15s}
+.star-toggle.on{background:rgba(200,168,83,.15);border-color:rgba(200,168,83,.35);color:var(--gold)}
+.add-btn{width:100%;padding:14px;background:linear-gradient(135deg,#5a52e8,var(--acc));border:none;border-radius:11px;color:#fff;font-size:15px;font-weight:500;cursor:pointer;font-family:'Noto Serif JP',serif;box-shadow:0 4px 20px rgba(108,99,255,.35)}
+.add-btn:active{transform:scale(.97)}
+.hl{border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 11px;font-size:12px;color:var(--sub);line-height:1.75;background:rgba(200,168,83,.07)}
+.hl strong{color:var(--gold)}
+.dl-btn{width:100%;padding:12px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.28);border-radius:10px;color:var(--grn);font-size:13px;cursor:pointer;font-family:'Noto Serif JP',serif}
+.preview{background:var(--s2);border:1px solid var(--bd2);border-radius:9px;padding:11px;font-size:12px;color:var(--sub);line-height:1.7;display:none;max-height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-break:break-all}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--s2);border:1px solid var(--bd2);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--tx);opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <span class="nav-logo">🎬 新作追加ツール</span>
+  <a href="/" style="font-size:11px;color:var(--dim);border:1px solid var(--bd);border-radius:16px;padding:5px 10px">← サイトへ</a>
+</nav>
+<div class="body">
+
+  <div class="card">
+    <div class="card-h">📽 新作を追加する</div>
+    <div class="card-b">
+      <div class="field">
+        <div class="field-label">作品番号（次の番号を入力）</div>
+        <input class="field-input" id="fNum" type="number" placeholder="例: 2480" oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <div class="field-label">作品タイトル</div>
+        <input class="field-input" id="fTitle" type="text" placeholder="例: 映画タイトル" oninput="updatePreview()" autocorrect="off">
+      </div>
+      <div class="field">
+        <div class="field-label">感想・コメント</div>
+        <textarea class="field-input field-ta" id="fDesc" placeholder="観た感想を自由に入力…" oninput="updatePreview()"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-label">YouTube予告URL（任意）</div>
+        <input class="field-input" id="fYt" type="url" placeholder="https://www.youtube.com/watch?v=..." oninput="updatePreview()" autocorrect="off" autocapitalize="off">
+      </div>
+      <div class="star-row">
+        <span class="star-label">お気に入り</span>
+        <button class="star-toggle" id="starBtn" onclick="toggleStar()">☆ OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">👀 プレビュー</div>
+    <div class="card-b">
+      <div class="preview" id="preview">入力すると確認できます</div>
+    </div>
+  </div>
+
+  <button class="add-btn" onclick="addMovie()">✅ movies.json に追加して保存</button>
+
+  <div class="hl">
+    <strong>使い方</strong>：上のボタンを押すと更新された <code>movies.json</code> がダウンロードされます。<br>
+    ダウンロードしたファイルをGitHubにアップロードすればサイトに即反映されます。
+  </div>
+
+  <div class="card" id="dlCard" style="display:none">
+    <div class="card-h">⬇ ダウンロード完了</div>
+    <div class="card-b">
+      <div class="hl" style="margin:0"><strong>次のステップ：</strong><br>
+        ① ダウンロードした <code>movies.json</code> をGitHubにアップロード<br>
+        ② github.com/nave23s/ouchi-de-cinema → Upload files → movies.json → Commit changes<br>
+        ③ 1〜2分後にサイトに反映されます
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let isStar = false;
+let MOVIES = [];
+
+// Load existing movies.json
+fetch('movies.json')
+  .then(r => r.json())
+  .then(d => {
+    MOVIES = d;
+    // Suggest next number
+    const maxN = Math.max(...MOVIES.map(m => m.n));
+    document.getElementById('fNum').value = maxN + 1;
+    updatePreview();
+  })
+  .catch(() => {
+    document.getElementById('fNum').placeholder = 'movies.jsonが見つかりません';
+  });
+
+function toggleStar() {
+  isStar = !isStar;
+  const btn = document.getElementById('starBtn');
+  btn.textContent = isStar ? '⭐ ON' : '☆ OFF';
+  btn.classList.toggle('on', isStar);
+  updatePreview();
+}
+
+function updatePreview() {
+  const n = parseInt(document.getElementById('fNum').value) || 0;
+  const t = document.getElementById('fTitle').value.trim();
+  const d = document.getElementById('fDesc').value.trim();
+  const y = document.getElementById('fYt').value.trim();
+  const pre = document.getElementById('preview');
+  if (!t) { pre.style.display = 'none'; return; }
+  const obj = { n, t, d, s: isStar, y: y || `https://www.youtube.com/results?search_query=${encodeURIComponent(t+'予告')}`, yt: y ? 'd' : 's' };
+  pre.style.display = 'block';
+  pre.textContent = JSON.stringify(obj, null, 2);
+}
+
+function addMovie() {
+  const n = parseInt(document.getElementById('fNum').value);
+  const t = document.getElementById('fTitle').value.trim();
+  const d = document.getElementById('fDesc').value.trim();
+  const y = document.getElementById('fYt').value.trim();
+
+  if (!n || !t) { showToast('⚠ 番号とタイトルは必須です'); return; }
+  if (MOVIES.find(m => m.n === n)) { showToast('⚠ その番号はすでに存在します'); return; }
+
+  const newMovie = {
+    n, t, d, s: isStar,
+    y: y || `https://www.youtube.com/results?search_query=${encodeURIComponent(t+'予告')}`,
+    yt: y ? 'd' : 's'
+  };
+
+  MOVIES.push(newMovie);
+  MOVIES.sort((a, b) => a.n - b.n);
+
+  // Download updated JSON
+  const blob = new Blob([JSON.stringify(MOVIES, null, 0)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'movies.json';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Reset form
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fYt').value = '';
+  document.getElementById('fNum').value = n + 1;
+  isStar = false;
+  document.getElementById('starBtn').textContent = '☆ OFF';
+  document.getElementById('starBtn').classList.remove('on');
+  document.getElementById('dlCard').style.display = '';
+  updatePreview();
+  showToast(`✅ 第${n}作品『${t}』を追加しました`);
+}
+
+function showToast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
