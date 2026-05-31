@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/USER/Downloads/register_2.html -->
+<!-- saved from url=(0047)file:///C:/Users/USER/Downloads/register_4.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>新作登録 | オウチ de cinema</title>
-<link href="./新作登録 _ オウチ de cinema_files/css2" rel="stylesheet">
+<link href="./register_files/css2" rel="stylesheet">
 <style>
 :root{
   --bg:#04040e;--s1:#0a0a1c;--s2:#101026;--s3:#161632;
@@ -259,6 +259,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <button class="fetch-btn" id="fetchBtn" onclick="fetchMovieInfo()" disabled="">
         ✨ 作品情報を自動取得
       </button>
+      <button class="fetch-btn" id="testBtn" onclick="testAPI()" style="margin-top:6px;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);box-shadow:none;font-size:12px;padding:9px">
+        🔌 API接続テスト
+      </button>
     </div>
   </div>
 
@@ -484,17 +487,17 @@ async function fetchMovieInfo() {
     </div>`;
 
   try {
-    const prompt = `映画「${title}」について以下の情報を調べて、JSONのみで返してください。他の文章は不要です。
+    const prompt = `映画「${title}」の情報をJSONのみで返してください。前置き・説明・マークダウン記法は一切不要です。JSONだけ返してください。
 
 {
   "title": "正式タイトル（日本語優先）",
-  "year": "公開年",
+  "year": "公開年（西暦4桁）",
   "director": "監督名",
   "cast": "主要出演者（カンマ区切り、最大5名）",
-  "theme_song": "主題歌・テーマ曲名（なければ空文字）",
-  "artist": "テーマ曲の歌い手（なければ空文字）",
-  "lyricist": "作詞者（なければ空文字）",
-  "composer": "作曲者（なければ空文字）",
+  "theme_song": "主題歌・テーマ曲名（不明または存在しない場合は空文字）",
+  "artist": "テーマ曲の歌い手（不明の場合は空文字）",
+  "lyricist": "作詞者（不明の場合は空文字）",
+  "composer": "作曲者（不明の場合は空文字）",
   "genre": "ジャンル（例: 邦画・ドラマ・サスペンス）"
 }`;
 
@@ -509,13 +512,12 @@ async function fetchMovieInfo() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 800,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
     });
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
-      throw new Error(errData?.error?.message || `APIエラー: ${res.status}`);
+      throw new Error(errData?.error?.message || `APIエラー ${res.status}`);
     }
 
     const data = await res.json();
@@ -959,6 +961,53 @@ function showToast(m) {
   const t = document.getElementById('toast');
   t.textContent = m; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── API TEST ──
+async function testAPI() {
+  const settings = getSettings();
+  if (!settings.anthropicKey) {
+    alert('APIキーを入力してください');
+    return;
+  }
+  const btn = document.getElementById('testBtn');
+  btn.textContent = '⏳ テスト中…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': settings.anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 10,
+        messages: [{ role: 'user', content: 'テスト' }]
+      })
+    });
+    if (res.ok) {
+      btn.textContent = '✅ 接続成功！';
+      btn.style.background = 'rgba(52,211,153,.25)';
+      showToast('✅ APIキーが正常に動作しています！');
+    } else {
+      const err = await res.json().catch(() => ({}));
+      const msg = err?.error?.message || `エラー: ${res.status}`;
+      btn.textContent = '❌ 接続失敗';
+      btn.style.background = 'rgba(248,113,113,.15)';
+      alert('接続エラー:\n' + msg + '\n\nAPIキーを確認してください。');
+    }
+  } catch(e) {
+    btn.textContent = '❌ 接続失敗';
+    alert('接続エラー:\n' + e.message);
+  }
+  setTimeout(() => {
+    btn.textContent = '🔌 API接続テスト';
+    btn.disabled = false;
+    btn.style.background = '';
+  }, 3000);
 }
 
 // ── INIT ──
