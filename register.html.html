@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)file:///C:/Users/USER/Downloads/register_2.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>新作登録 | オウチ de cinema</title>
+<link href="./新作登録 _ オウチ de cinema_files/css2" rel="stylesheet">
+<style>
+:root{
+  --bg:#04040e;--s1:#0a0a1c;--s2:#101026;--s3:#161632;
+  --bd:#1e1e3c;--bd2:#2c2c52;
+  --gold:#c8a853;--gb:#e8c878;--gd:#7a6030;
+  --tx:#f4f0e4;--sub:#a0a0c4;--dim:#505080;
+  --acc:#6c63ff;--acc2:#4a42d4;
+  --grn:#34d399;--red:#f87171;--or:#fb923c;--pk:#f472b6;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:'Noto Serif JP',serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(4,4,14,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:calc(var(--safe-t)+10px) 15px 10px;display:flex;align-items:center;gap:8px}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--gold);flex:1}
+.nav-links{display:flex;gap:5px}
+.nav-link{font-size:10px;color:var(--dim);padding:5px 9px;border:1px solid var(--bd);border-radius:14px}
+
+/* ── STEPPER ── */
+.stepper{display:flex;padding:12px 15px 0;gap:0}
+.step-pip{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.step-pip::after{content:'';position:absolute;top:12px;left:50%;right:-50%;height:2px;background:var(--bd);z-index:0}
+.step-pip:last-child::after{display:none}
+.step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--bd);background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;z-index:1;transition:all .3s}
+.step-pip.active .step-dot{border-color:var(--gold);background:rgba(200,168,83,.15);color:var(--gold)}
+.step-pip.done .step-dot{border-color:var(--grn);background:rgba(52,211,153,.15);color:var(--grn)}
+.step-lbl{font-size:9px;color:var(--dim);text-align:center;line-height:1.2}
+.step-pip.active .step-lbl{color:var(--gold)}
+.step-pip.done .step-lbl{color:var(--grn)}
+
+/* ── BODY ── */
+.body{padding:14px 15px calc(var(--safe-b)+80px)}
+
+/* ── PANELS ── */
+.panel{display:none;animation:fadeIn .25s ease}
+.panel.show{display:flex;flex-direction:column;gap:11px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;overflow:hidden}
+.card-h{padding:11px 13px 9px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px}
+.card-h-ico{font-size:16px;flex-shrink:0}
+.card-h-txt{font-size:13px;font-weight:600;color:var(--tx)}
+.card-h-sub{font-size:10px;color:var(--sub);margin-top:1px}
+.card-b{padding:12px 13px;display:flex;flex-direction:column;gap:9px}
+
+/* ── FIELDS ── */
+.field{display:flex;flex-direction:column;gap:4px}
+.field-row{display:flex;align-items:center;gap:8px}
+.label{font-size:10px;color:var(--sub);letter-spacing:.06em;display:flex;align-items:center;gap:5px}
+.label-req{color:var(--red);font-size:9px}
+.label-auto{color:var(--acc);font-size:9px;background:rgba(108,99,255,.1);padding:1px 5px;border-radius:5px}
+.inp{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:15px;outline:none;-webkit-appearance:none;transition:border-color .2s}
+.inp:focus{border-color:var(--gd)}
+.inp::placeholder{color:var(--dim);font-size:13px}
+.inp-sm{font-size:13px;padding:8px 10px}
+.ta{min-height:100px;resize:none;line-height:1.85}
+.ta-lg{min-height:180px}
+.inp.fetched{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.04)}
+
+/* ── BIG TITLE INPUT ── */
+.title-input-wrap{position:relative}
+.title-input{width:100%;background:var(--s2);border:2px solid var(--bd);border-radius:12px;padding:14px 50px 14px 14px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:18px;font-weight:500;outline:none;-webkit-appearance:none;transition:border-color .2s}
+.title-input:focus{border-color:var(--gd)}
+.title-input::placeholder{color:var(--dim);font-size:14px}
+.title-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px}
+
+/* ── FETCH BUTTON ── */
+.fetch-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--acc2),var(--acc));border:none;border-radius:11px;color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'Noto Serif JP',serif;box-shadow:0 4px 20px rgba(108,99,255,.35);transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px}
+.fetch-btn:active{transform:scale(.97)}
+.fetch-btn:disabled{opacity:.4;pointer-events:none}
+
+/* ── LOADING STATE ── */
+.loading-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:24px;text-align:center}
+.spin{display:inline-block;width:28px;height:28px;border:2.5px solid rgba(108,99,255,.2);border-top-color:var(--acc);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading-txt{font-size:12px;color:var(--sub);line-height:1.9}
+
+/* ── REVIEW AREA ── */
+.review-wrap{position:relative}
+.review-ta{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:13.5px;line-height:1.9;resize:none;outline:none;min-height:140px;font-weight:300}
+.review-ta:focus{border-color:var(--gd)}
+.review-ta.generated{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.04)}
+.char-count{font-size:10px;color:var(--dim);text-align:right;margin-top:3px;font-family:'JetBrains Mono',monospace}
+
+/* ── GENERATE BTN ── */
+.gen-btn{width:100%;padding:12px;background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(244,114,182,.2));border:1px solid rgba(168,85,247,.35);border-radius:10px;color:#c084fc;font-size:13px;cursor:pointer;font-family:'Noto Serif JP',serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.gen-btn:active{background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(244,114,182,.3))}
+.gen-btn:disabled{opacity:.35;pointer-events:none}
+
+/* ── META FIELDS ── */
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.meta-item{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 10px}
+.meta-lbl{font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:3px}
+.meta-val{font-size:12.5px;color:var(--tx);font-weight:400;line-height:1.4;word-break:break-all}
+.meta-val.editable{background:transparent;border:none;outline:none;width:100%;font-family:'Noto Serif JP',serif;font-size:12.5px;color:var(--tx);padding:0;resize:none;min-height:20px}
+
+/* ── STAR / NUMBER ── */
+.num-row{display:flex;gap:8px;align-items:center}
+.num-inp{width:80px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;outline:none;text-align:center;-webkit-appearance:none}
+.star-btn{flex:1;padding:9px;background:transparent;border:1px solid var(--bd);border-radius:8px;font-size:12px;color:var(--dim);cursor:pointer;font-family:'Noto Serif JP',serif;transition:all .15s;text-align:center}
+.star-btn.on{background:rgba(200,168,83,.12);border-color:rgba(200,168,83,.3);color:var(--gold)}
+.yt-row{display:flex;gap:6px;align-items:center}
+.yt-inp{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;-webkit-appearance:none}
+.yt-inp::placeholder{color:var(--dim);font-family:'Noto Serif JP',serif;font-size:11px}
+
+/* ── PREVIEW ── */
+.preview-card{background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:14px}
+.preview-num{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.preview-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--tx);margin-bottom:12px}
+.preview-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.preview-tag{font-size:10px;padding:3px 8px;border-radius:7px;background:var(--s2);border:1px solid var(--bd);color:var(--sub)}
+.preview-review{font-size:13px;color:var(--sub);line-height:1.9;white-space:pre-wrap;font-weight:300}
+
+/* ── ACTION BUTTONS ── */
+.action-panel{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,14,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);padding:12px 15px calc(var(--safe-b)+12px)}
+.action-title{font-size:11px;color:var(--dim);text-align:center;margin-bottom:10px;letter-spacing:.06em}
+.action-btns{display:flex;gap:8px}
+.act-btn{flex:1;padding:13px;border-radius:11px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid;text-align:center}
+.act-btn:active{transform:scale(.96)}
+.btn-register{background:linear-gradient(135deg,#16a34a,var(--grn));border-color:transparent;color:#fff;box-shadow:0 3px 16px rgba(52,211,153,.3);flex:1.4}
+.btn-draft{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.28);color:var(--or)}
+.btn-cancel{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.22);color:var(--red)}
+
+/* ── SETTINGS ── */
+.settings-panel{background:var(--s1);border:1px solid var(--bd);border-radius:13px;overflow:hidden}
+.settings-h{padding:10px 13px;border-bottom:1px solid var(--bd);font-size:12px;font-weight:600;color:var(--sub);display:flex;align-items:center;justify-content:space-between}
+.settings-toggle{font-size:11px;color:var(--acc);cursor:pointer}
+.settings-body{padding:12px 13px;display:flex;flex-direction:column;gap:8px;display:none}
+.settings-body.open{display:flex}
+
+/* ── DRAFT LIST ── */
+.draft-item{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.draft-info{flex:1}
+.draft-title{font-size:13px;color:var(--tx);margin-bottom:2px}
+.draft-date{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+.draft-load{font-size:11px;color:var(--acc);cursor:pointer;flex-shrink:0}
+.draft-del{font-size:11px;color:var(--red);cursor:pointer;flex-shrink:0}
+
+/* HIGHLIGHT */
+.hl{border-left:3px solid;border-radius:0 8px 8px 0;padding:9px 11px;font-size:11.5px;line-height:1.75}
+.hl-gold{background:rgba(200,168,83,.07);border-color:var(--gold);color:var(--sub)}
+.hl-gold strong{color:var(--gold)}
+.hl-red{background:rgba(248,113,113,.07);border-color:var(--red);color:var(--sub)}
+.hl-red strong{color:var(--red)}
+.hl-grn{background:rgba(52,211,153,.07);border-color:var(--grn);color:var(--sub)}
+.hl-grn strong{color:var(--grn)}
+
+/* SUCCESS/ERROR */
+.result-card{border-radius:13px;padding:28px 20px;text-align:center}
+.result-ico{font-size:48px;display:block;margin-bottom:12px}
+.result-title{font-size:18px;font-weight:600;margin-bottom:6px}
+.result-desc{font-size:12px;color:var(--sub);line-height:1.8}
+
+/* NAV BTNs */
+.nav-btns{display:flex;gap:8px;margin-top:4px}
+.nb{flex:1;padding:11px;border-radius:10px;font-family:'Noto Serif JP',serif;font-size:13px;cursor:pointer;border:1px solid;transition:all .15s;text-align:center}
+.nb:active{transform:scale(.96)}
+.nb-back{background:var(--s1);border-color:var(--bd);color:var(--sub)}
+.nb-next{background:linear-gradient(135deg,var(--acc2),var(--acc));border-color:transparent;color:#fff;box-shadow:0 3px 16px rgba(108,99,255,.3)}
+.nb-next:disabled{opacity:.3;pointer-events:none}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--safe-b)+90px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--s3);border:1px solid var(--bd2);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--tx);opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Confirm modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:flex-end}
+.modal-bg.show{display:flex}
+.modal{background:var(--s1);border:1px solid var(--bd);border-radius:16px 16px 0 0;padding:20px 16px calc(var(--safe-b)+20px);width:100%}
+.modal-title{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:6px}
+.modal-desc{font-size:12px;color:var(--sub);margin-bottom:16px;line-height:1.7}
+.modal-btns{display:flex;gap:8px}
+.mb-cancel{flex:1;padding:12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;color:var(--sub);font-family:'Noto Serif JP',serif;font-size:13px;cursor:pointer}
+.mb-confirm{flex:1.5;padding:12px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:500;cursor:pointer}
+
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-logo">🎬 新作登録</span>
+  <div class="nav-links">
+    <a href="file:///C:/manage" class="nav-link">⚙ 管理</a>
+    <a href="file:///C:/list" class="nav-link">📋 リスト</a>
+    <a href="file:///C:/" class="nav-link">← TOP</a>
+  </div>
+</nav>
+
+<!-- STEPPER -->
+<div class="stepper" id="stepper">
+  <div class="step-pip active" id="pip0"><div class="step-dot">1</div><div class="step-lbl">タイトル</div></div>
+  <div class="step-pip" id="pip1"><div class="step-dot">2</div><div class="step-lbl">作品情報</div></div>
+  <div class="step-pip" id="pip2"><div class="step-dot">3</div><div class="step-lbl">レビュー</div></div>
+  <div class="step-pip" id="pip3"><div class="step-dot">4</div><div class="step-lbl">確認・登録</div></div>
+</div>
+
+<div class="body">
+
+<!-- ══════════ STEP 1: タイトル入力 ══════════ -->
+<div class="panel show" id="panel0">
+
+  <!-- Settings (collapsible) -->
+  <div class="settings-panel">
+    <div class="settings-h">
+      ⚙ API設定
+      <span class="settings-toggle" onclick="toggleSettings()">▼ 設定する</span>
+    </div>
+    <div class="settings-body" id="settingsBody">
+      <div class="field">
+        <div class="label">Anthropic APIキー <span class="label-req">必須</span></div>
+        <input class="inp inp-sm" type="password" id="cfgAnthropicKey" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <div class="label">GitHub Personal Access Token <span class="label-req">登録ボタン用</span></div>
+        <input class="inp inp-sm" type="password" id="cfgGhToken" placeholder="ghp_..." autocomplete="off" spellcheck="false">
+        <div style="font-size:10px;color:var(--dim);line-height:1.6;margin-top:2px">
+          github.com → Settings → Developer settings → Personal access tokens → Fine-grained → Contents:Read&amp;Write
+        </div>
+      </div>
+      <button class="fetch-btn" style="padding:9px;font-size:12px" onclick="saveSettings()">💾 設定を保存</button>
+    </div>
+  </div>
+
+  <!-- Draft list -->
+  <div id="draftSection" style="display:none">
+    <div class="card">
+      <div class="card-h"><span class="card-h-ico">📝</span><div><div class="card-h-txt">下書き一覧</div></div></div>
+      <div class="card-b" id="draftList"></div>
+    </div>
+  </div>
+
+  <!-- Title input -->
+  <div class="card">
+    <div class="card-h"><span class="card-h-ico">🎬</span><div><div class="card-h-txt">映画タイトルを入力</div><div class="card-h-sub">日本語・英語どちらでもOK</div></div></div>
+    <div class="card-b">
+      <div class="title-input-wrap">
+        <input class="title-input" id="titleInput" type="text" placeholder="例：GOLDFISH　/ 春画先生" autocorrect="off" spellcheck="false" oninput="onTitleInput()">
+        <button class="title-clear" onclick="clearTitle()">×</button>
+      </div>
+      <div class="field">
+        <div class="label">作品番号 <span class="label-auto">自動取得</span></div>
+        <div class="num-row">
+          <input class="num-inp" id="numInput" type="number" placeholder="番号を入力">
+          <button class="star-btn" id="starBtn" onclick="toggleStar()">☆ お気に入りでない</button>
+        </div>
+      </div>
+      <button class="fetch-btn" id="fetchBtn" onclick="fetchMovieInfo()" disabled="">
+        ✨ 作品情報を自動取得
+      </button>
+    </div>
+  </div>
+
+  <div class="hl hl-gold">
+    <strong>使い方</strong>：タイトルを入力 → 「作品情報を自動取得」で監督・出演者・公開年・テーマ曲などが自動入力されます。
+  </div>
+</div>
+
+<!-- ══════════ STEP 2: 作品情報 ══════════ -->
+<div class="panel" id="panel1">
+  <div class="card">
+    <div class="card-h"><span class="card-h-ico">📋</span><div><div class="card-h-txt">取得した作品情報</div><div class="card-h-sub">タップして編集できます</div></div></div>
+    <div class="card-b">
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-lbl">公開年</div><textarea class="meta-val editable" id="mYear" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">監督</div><textarea class="meta-val editable" id="mDir" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item" style="grid-column:1/-1"><div class="meta-lbl">出演者</div><textarea class="meta-val editable" id="mCast" rows="2" placeholder="—"></textarea></div>
+        <div class="meta-item" style="grid-column:1/-1"><div class="meta-lbl">テーマ曲</div><textarea class="meta-val editable" id="mSong" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">歌い手</div><textarea class="meta-val editable" id="mArtist" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">作詞</div><textarea class="meta-val editable" id="mLyric" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">作曲</div><textarea class="meta-val editable" id="mCompose" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">ジャンル</div><textarea class="meta-val editable" id="mGenre" rows="1" placeholder="—"></textarea></div>
+      </div>
+      <div class="field">
+        <div class="label">YouTube予告URL（任意）</div>
+        <div class="yt-row">
+          <input class="yt-inp" id="ytUrl" type="url" placeholder="https://youtube.com/watch?v=..." autocorrect="off" autocapitalize="off">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="nb nb-back" onclick="goStep(0)">← 戻る</button>
+    <button class="nb nb-next" onclick="goStep(2)">レビューへ →</button>
+  </div>
+</div>
+
+<!-- ══════════ STEP 3: レビュー ══════════ -->
+<div class="panel" id="panel2">
+  <div class="card">
+    <div class="card-h"><span class="card-h-ico">✍️</span><div><div class="card-h-txt">ひとことメモ（任意）</div><div class="card-h-sub">観た感想・印象をざっくり入力</div></div></div>
+    <div class="card-b">
+      <div class="review-wrap">
+        <textarea class="review-ta" id="shortNote" placeholder="例：ライブシーンが最高だった。主演俳優の演技に度肝抜かれた。パンクな時代の話。
+
+ここに書いた内容をもとにAIが詳しいレビューを生成します。空欄でも自動生成できます。" oninput="updateCharCount(&#39;shortNote&#39;,&#39;shortCount&#39;)"></textarea>
+        <div class="char-count" id="shortCount">0字</div>
+      </div>
+      <button class="gen-btn" id="genBtn" onclick="generateReview()">
+        ✨ AIレビューを生成（起承転結・1000字）
+      </button>
+    </div>
+  </div>
+
+  <div class="card" id="generatedCard" style="display:none">
+    <div class="card-h"><span class="card-h-ico">🤖</span><div><div class="card-h-txt">生成されたレビュー</div><div class="card-h-sub">タップして編集できます</div></div></div>
+    <div class="card-b">
+      <div class="review-wrap">
+        <textarea class="review-ta review-ta-lg generated" id="fullReview" oninput="updateCharCount(&#39;fullReview&#39;,&#39;fullCount&#39;)"></textarea>
+        <div class="char-count" id="fullCount">0字</div>
+      </div>
+      <button class="gen-btn" onclick="generateReview()">🔄 再生成する</button>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nb nb-back" onclick="goStep(1)">← 戻る</button>
+    <button class="nb nb-next" id="toPreviewBtn" onclick="goStep(3)">確認へ →</button>
+  </div>
+</div>
+
+<!-- ══════════ STEP 4: 確認・登録 ══════════ -->
+<div class="panel" id="panel3">
+  <div class="preview-card" id="previewCard">
+    <div class="preview-num" id="pvNum"></div>
+    <div class="preview-title" id="pvTitle"></div>
+    <div class="preview-meta" id="pvMeta"></div>
+    <div class="preview-review" id="pvReview"></div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 5: 完了 ══════════ -->
+<div class="panel" id="panel4">
+  <div class="result-card" id="resultCard"></div>
+</div>
+
+</div><!-- /body -->
+
+<!-- ACTION PANEL (Step 4のみ表示) -->
+<div class="action-panel" id="actionPanel" style="display:none">
+  <div class="action-title">この内容でよろしいですか？</div>
+  <div class="action-btns">
+    <button class="act-btn btn-register" onclick="confirmAction(&#39;register&#39;)">✅ 登録する</button>
+    <button class="act-btn btn-draft" onclick="confirmAction(&#39;draft&#39;)">📝 下書き</button>
+    <button class="act-btn btn-cancel" onclick="confirmAction(&#39;cancel&#39;)">✕ やめる</button>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="modal-bg" id="cancelModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">入力内容をクリアしますか？</div>
+    <div class="modal-desc" id="modalDesc">入力した内容はすべて削除されます。この操作は元に戻せません。</div>
+    <div class="modal-btns">
+      <button class="mb-cancel" onclick="closeModal()">やめておく</button>
+      <button class="mb-confirm" id="modalConfirmBtn" onclick="executeCancel()">クリアする</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let currentStep = 0;
+let isStar = false;
+let movieInfo = {};
+let MOVIES = [];
+
+// ── SETTINGS ──
+const SETTINGS_KEY = 'odc_settings';
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    if (s.anthropicKey) document.getElementById('cfgAnthropicKey').value = s.anthropicKey;
+    if (s.ghToken)     document.getElementById('cfgGhToken').value = s.ghToken;
+  } catch(e) {}
+}
+function saveSettings() {
+  const s = {
+    anthropicKey: document.getElementById('cfgAnthropicKey').value.trim(),
+    ghToken:      document.getElementById('cfgGhToken').value.trim()
+  };
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  showToast('💾 設定を保存しました');
+  toggleSettings();
+}
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function toggleSettings() {
+  const body = document.getElementById('settingsBody');
+  const btn  = document.querySelector('.settings-toggle');
+  const open = body.classList.toggle('open');
+  btn.textContent = open ? '▲ 閉じる' : '▼ 設定する';
+}
+
+// ── LOAD movies.json + SUGGEST NEXT NUMBER ──
+fetch('/movies.json')
+  .then(r => r.json())
+  .then(data => {
+    MOVIES = data;
+    const maxN = Math.max(...data.map(m => m.n));
+    document.getElementById('numInput').value = maxN + 1;
+    loadDrafts();
+  })
+  .catch(() => {
+    document.getElementById('numInput').placeholder = '番号を入力';
+  });
+
+// ── TITLE INPUT ──
+function onTitleInput() {
+  const val = document.getElementById('titleInput').value.trim();
+  document.getElementById('fetchBtn').disabled = !val;
+}
+function clearTitle() {
+  document.getElementById('titleInput').value = '';
+  document.getElementById('fetchBtn').disabled = true;
+}
+function toggleStar() {
+  isStar = !isStar;
+  const btn = document.getElementById('starBtn');
+  btn.textContent = isStar ? '⭐ お気に入り' : '☆ お気に入りでない';
+  btn.classList.toggle('on', isStar);
+}
+
+// ── STEP NAVIGATION ──
+function goStep(n) {
+  // Hide current
+  document.getElementById(`panel${currentStep}`).classList.remove('show');
+  document.getElementById(`pip${currentStep}`).classList.remove('active');
+  document.getElementById(`pip${currentStep}`).classList.add('done');
+  // Show new
+  currentStep = n;
+  document.getElementById(`panel${n}`).classList.add('show');
+  document.getElementById(`pip${n}`)?.classList.remove('done');
+  document.getElementById(`pip${n}`)?.classList.add('active');
+  // Action panel
+  document.getElementById('actionPanel').style.display = n === 3 ? '' : 'none';
+  // Render preview
+  if (n === 3) renderPreview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── FETCH MOVIE INFO (Claude API + web_search) ──
+async function fetchMovieInfo() {
+  const title = document.getElementById('titleInput').value.trim();
+  if (!title) return;
+
+  const settings = getSettings();
+  if (!settings.anthropicKey) {
+    showToast('⚠ APIキーを設定してください');
+    document.getElementById('settingsBody').classList.add('open');
+    return;
+  }
+
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin" style="width:16px;height:16px;border-width:2px;margin:0"></div> 取得中…';
+
+  // Show loading in panel1
+  document.getElementById('panel0').classList.remove('show');
+  currentStep = 1;
+  document.getElementById('panel1').classList.add('show');
+  document.getElementById('panel1').innerHTML = `
+    <div class="loading-card">
+      <div class="spin"></div>
+      <div class="loading-txt">
+        「${title}」の情報を検索中…<br>
+        監督・出演者・テーマ曲などを取得しています
+      </div>
+    </div>`;
+
+  try {
+    const prompt = `映画「${title}」について以下の情報を調べて、JSONのみで返してください。他の文章は不要です。
+
+{
+  "title": "正式タイトル（日本語優先）",
+  "year": "公開年",
+  "director": "監督名",
+  "cast": "主要出演者（カンマ区切り、最大5名）",
+  "theme_song": "主題歌・テーマ曲名（なければ空文字）",
+  "artist": "テーマ曲の歌い手（なければ空文字）",
+  "lyricist": "作詞者（なければ空文字）",
+  "composer": "作曲者（なければ空文字）",
+  "genre": "ジャンル（例: 邦画・ドラマ・サスペンス）"
+}`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': settings.anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData?.error?.message || `APIエラー: ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('情報の取得に失敗しました');
+
+    movieInfo = JSON.parse(jsonMatch[0]);
+
+    // Restore panel1 and fill fields
+    document.getElementById('panel1').innerHTML = buildPanel1HTML();
+    document.getElementById('pip0').classList.add('done');
+    document.getElementById('pip0').classList.remove('active');
+    document.getElementById('pip1').classList.remove('done');
+    document.getElementById('pip1').classList.add('active');
+
+    // Fill fields
+    setField('mYear',    movieInfo.year);
+    setField('mDir',     movieInfo.director);
+    setField('mCast',    movieInfo.cast);
+    setField('mSong',    movieInfo.theme_song);
+    setField('mArtist',  movieInfo.artist);
+    setField('mLyric',   movieInfo.lyricist);
+    setField('mCompose', movieInfo.composer);
+    setField('mGenre',   movieInfo.genre);
+
+    // Mark as fetched
+    document.querySelectorAll('.meta-val.editable').forEach(el => {
+      if (el.value && el.value !== '—') el.classList.add('fetched');
+    });
+
+    showToast('✅ 作品情報を取得しました');
+
+  } catch(e) {
+    // Restore step0 on error
+    document.getElementById('panel1').classList.remove('show');
+    currentStep = 0;
+    document.getElementById('panel0').classList.add('show');
+    document.getElementById('pip0').classList.remove('done');
+    document.getElementById('pip0').classList.add('active');
+    document.getElementById('pip1').classList.remove('active');
+    const msg = e.message || '取得に失敗しました';
+    console.error('Fetch error:', e);
+    showToast('⚠ ' + msg.substring(0, 50));
+    // Show alert for more detail
+    if (msg.includes('401') || msg.includes('authentication')) {
+      alert('APIキーが正しくありません。\n⚙ API設定からAnthropicのAPIキーを確認してください。');
+    }
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✨ 作品情報を自動取得';
+}
+
+function setField(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+function buildPanel1HTML() {
+  return `
+  <div class="card">
+    <div class="card-h"><span class="card-h-ico">📋</span><div><div class="card-h-txt">取得した作品情報</div><div class="card-h-sub">タップして編集できます</div></div></div>
+    <div class="card-b">
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-lbl">公開年</div><textarea class="meta-val editable" id="mYear" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">監督</div><textarea class="meta-val editable" id="mDir" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item" style="grid-column:1/-1"><div class="meta-lbl">出演者</div><textarea class="meta-val editable" id="mCast" rows="2" placeholder="—"></textarea></div>
+        <div class="meta-item" style="grid-column:1/-1"><div class="meta-lbl">テーマ曲</div><textarea class="meta-val editable" id="mSong" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">歌い手</div><textarea class="meta-val editable" id="mArtist" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">作詞</div><textarea class="meta-val editable" id="mLyric" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">作曲</div><textarea class="meta-val editable" id="mCompose" rows="1" placeholder="—"></textarea></div>
+        <div class="meta-item"><div class="meta-lbl">ジャンル</div><textarea class="meta-val editable" id="mGenre" rows="1" placeholder="—"></textarea></div>
+      </div>
+      <div class="field">
+        <div class="label">YouTube予告URL（任意）</div>
+        <div class="yt-row">
+          <input class="yt-inp" id="ytUrl" type="url" placeholder="https://youtube.com/watch?v=..." autocorrect="off" autocapitalize="off">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="nb nb-back" onclick="goStep(0)">← 戻る</button>
+    <button class="nb nb-next" onclick="goStep(2)">レビューへ →</button>
+  </div>`;
+}
+
+// ── GENERATE REVIEW (Claude API) ──
+async function generateReview() {
+  const settings = getSettings();
+  if (!settings.anthropicKey) {
+    showToast('⚠ APIキーを設定してください');
+    return;
+  }
+
+  const title  = document.getElementById('titleInput').value.trim();
+  const notes  = document.getElementById('shortNote').value.trim();
+  const dir    = document.getElementById('mDir')?.value || '';
+  const cast   = document.getElementById('mCast')?.value || '';
+  const year   = document.getElementById('mYear')?.value || '';
+  const genre  = document.getElementById('mGenre')?.value || '';
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin" style="width:14px;height:14px;border-width:2px;margin:0 4px 0 0"></div> 生成中…（約20秒）';
+
+  const stylePrompt = `あなたは映画ブロガーの代筆ライターです。以下の文体サンプルを完全に再現して、映画「${title}」の詳しいレビューを書いてください。
+
+【文体の絶対ルール】
+- 一人称は「私」または「アタシ」を自然に使う
+- 俳優名には必ず「〇〇さん」と敬称をつける
+- (笑)、w、！、✨ などを自然な頻度で使う
+- 短い文の積み重ね・体言止めを多用
+- リアルな感情の反応（スゴい、泣いた、笑った、度肝を抜かれた）を書く
+- 最後は「観たい！」と思わせる一文で締める
+
+【文体サンプル】
+「スゴい。ひとことで、スゴい。いつのまにか主役になってました 笑 そして、衝撃のエンディング。度肝を抜かれました。」
+「ドロンジョ役の深田恭子さんが可愛すぎて、その一言に尽きます。」
+「名作です。漫画原作を凌駕する映画ってあまりないと思うのですが、はっきり言って原作よりも素晴らしい。」
+
+【起承転結の構成で1000字程度】
+起：映画・作品への印象的な導入
+承：ストーリー・見どころを自分の視点で展開
+転：印象的なシーン・俳優・意外な展開
+結：総評と観たくなる締めの一文
+
+【映画情報】
+タイトル：${title}
+公開年：${year}
+監督：${dir}
+出演：${cast}
+ジャンル：${genre}
+
+【私のメモ・感想】
+${notes || '（メモなし。映画の内容から推測して書いてください）'}
+
+上記の文体で1000字前後のレビューをコメント本文だけ返してください。前置き不要。`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': settings.anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: stylePrompt }]
+      })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData?.error?.message || `APIエラー: ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+
+    if (text && text.length > 100) {
+      const ta = document.getElementById('fullReview');
+      if (ta) {
+        ta.value = text;
+        updateCharCount('fullReview', 'fullCount');
+      }
+      document.getElementById('generatedCard').style.display = '';
+      showToast('✨ レビューを生成しました！');
+    } else {
+      showToast('⚠ 生成に失敗しました。再試行してください。');
+    }
+  } catch(e) {
+    showToast('⚠ エラー: ' + e.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✨ AIレビューを生成（起承転結・1000字）';
+}
+
+// ── PREVIEW ──
+function renderPreview() {
+  const n     = document.getElementById('numInput').value;
+  const title = document.getElementById('titleInput').value.trim();
+  const review = document.getElementById('fullReview')?.value ||
+                 document.getElementById('shortNote').value || '';
+  const dir   = document.getElementById('mDir')?.value || '';
+  const cast  = document.getElementById('mCast')?.value || '';
+  const year  = document.getElementById('mYear')?.value || '';
+  const genre = document.getElementById('mGenre')?.value || '';
+  const song  = document.getElementById('mSong')?.value || '';
+  const artist= document.getElementById('mArtist')?.value || '';
+
+  document.getElementById('pvNum').textContent   = `第 ${n} 作品`;
+  document.getElementById('pvTitle').textContent = title;
+
+  const tags = [year, dir, genre].filter(Boolean);
+  document.getElementById('pvMeta').innerHTML = tags.map(t =>
+    `<span class="preview-tag">${esc(t)}</span>`).join('');
+  if (song) document.getElementById('pvMeta').innerHTML +=
+    `<span class="preview-tag">🎵 ${esc(song)}${artist ? ' / ' + esc(artist) : ''}</span>`;
+
+  document.getElementById('pvReview').textContent = review || '（レビューなし）';
+}
+
+// ── ACTION ──
+function confirmAction(type) {
+  if (type === 'cancel') {
+    document.getElementById('modalTitle').textContent = '入力内容をクリアしますか？';
+    document.getElementById('modalDesc').textContent  = '入力した情報・生成されたレビューはすべて削除されます。この操作は元に戻せません。';
+    document.getElementById('modalConfirmBtn').textContent = 'クリアする';
+    document.getElementById('modalConfirmBtn').onclick = executeCancel;
+    document.getElementById('cancelModal').classList.add('show');
+    return;
+  }
+  if (type === 'draft') { saveDraft(); return; }
+  if (type === 'register') { doRegister(); }
+}
+
+function closeModal() {
+  document.getElementById('cancelModal').classList.remove('show');
+}
+
+function executeCancel() {
+  closeModal();
+  // Reset all
+  document.getElementById('titleInput').value = '';
+  document.getElementById('numInput').value = '';
+  document.getElementById('shortNote').value = '';
+  const fr = document.getElementById('fullReview');
+  if (fr) fr.value = '';
+  document.getElementById('generatedCard').style.display = 'none';
+  isStar = false;
+  document.getElementById('starBtn').textContent = '☆ お気に入りでない';
+  document.getElementById('starBtn').classList.remove('on');
+  movieInfo = {};
+  goStep(0);
+  // Re-fetch next number
+  fetch('/movies.json').then(r => r.json()).then(data => {
+    const maxN = Math.max(...data.map(m => m.n));
+    document.getElementById('numInput').value = maxN + 1;
+  });
+  showToast('🗑 クリアしました');
+}
+
+// ── SAVE DRAFT ──
+function saveDraft() {
+  const draft = buildMovieObject();
+  const drafts = getDrafts();
+  const idx = drafts.findIndex(d => d.n === draft.n);
+  if (idx >= 0) drafts[idx] = draft; else drafts.push(draft);
+  localStorage.setItem('odc_drafts', JSON.stringify(drafts));
+
+  goStep(4);
+  document.getElementById('panel4').classList.add('show');
+  document.getElementById('resultCard').innerHTML = `
+    <span class="result-ico">📝</span>
+    <div class="result-title" style="color:var(--or)">下書きに保存しました</div>
+    <div class="result-desc">「${draft.t}」を下書きとして保存しました。<br>後でこのページを開くと下書き一覧から再編集できます。<br><br>GitHubへのアップロードは手動で行ってください。</div>
+    <div class="nav-btns" style="margin-top:16px">
+      <button class="nb nb-next" onclick="location.reload()">+ 次の作品を登録</button>
+    </div>`;
+  showToast('📝 下書きに保存しました');
+}
+
+// ── REGISTER (GitHub API) ──
+async function doRegister() {
+  const settings = getSettings();
+  if (!settings.ghToken) {
+    showToast('⚠ GitHubトークンを設定してください');
+    document.getElementById('settingsBody').classList.add('open');
+    document.getElementById('actionPanel').style.display = 'none';
+    window.scrollTo({ top: 0 });
+    return;
+  }
+
+  document.getElementById('actionPanel').style.display = 'none';
+  goStep(4);
+
+  document.getElementById('resultCard').innerHTML = `
+    <div class="spin" style="width:36px;height:36px;margin:0 auto 16px"></div>
+    <div class="result-title" style="color:var(--sub);font-size:14px">GitHubにアップロード中…</div>`;
+
+  const newMovie = buildMovieObject();
+
+  try {
+    const REPO = 'nave23s/ouchi-de-cinema';
+    const PATH = 'movies.json';
+    const TOKEN = settings.ghToken;
+
+    // 1. Get current file SHA
+    const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!metaRes.ok) throw new Error(`GitHub API error: ${metaRes.status}`);
+    const meta = await metaRes.json();
+    const sha = meta.sha;
+
+    // 2. Get current content (decode base64)
+    const currentJson = JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+
+    // 3. Add new movie
+    if (currentJson.find(m => m.n === newMovie.n)) {
+      throw new Error(`番号 ${newMovie.n} はすでに存在します`);
+    }
+    currentJson.push(newMovie);
+    currentJson.sort((a, b) => a.n - b.n);
+
+    // 4. Upload
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(currentJson, null, 0))));
+    const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${TOKEN}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: `📽 追加: ${newMovie.t}（第${newMovie.n}作品）`,
+        content: newContent,
+        sha: sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || `Upload error: ${putRes.status}`);
+    }
+
+    document.getElementById('resultCard').innerHTML = `
+      <span class="result-ico">🎉</span>
+      <div class="result-title" style="color:var(--grn)">登録完了！</div>
+      <div class="result-desc">
+        第${newMovie.n}作品「${esc(newMovie.t)}」を<br>
+        サイトに登録しました。<br><br>
+        1〜2分後にサイトに反映されます。<br>
+        <a href="/list?n=${newMovie.n}" style="color:var(--gold)">→ 作品ページで確認する</a>
+      </div>
+      <div class="nav-btns" style="margin-top:16px">
+        <button class="nb nb-next" onclick="location.reload()">+ 次の作品を登録</button>
+      </div>`;
+
+    // Remove from drafts if it was one
+    const drafts = getDrafts().filter(d => d.n !== newMovie.n);
+    localStorage.setItem('odc_drafts', JSON.stringify(drafts));
+
+  } catch(e) {
+    document.getElementById('resultCard').innerHTML = `
+      <span class="result-ico">⚠️</span>
+      <div class="result-title" style="color:var(--red)">アップロードに失敗しました</div>
+      <div class="result-desc">${esc(e.message)}<br><br>下書きとして保存してから、後でGitHubに手動でアップロードしてください。</div>
+      <div class="nav-btns" style="margin-top:16px">
+        <button class="nb nb-back" onclick="goStep(3)">← 戻る</button>
+        <button class="nb nb-next" onclick="saveDraft()">📝 下書きに保存</button>
+      </div>`;
+  }
+}
+
+// ── BUILD MOVIE OBJECT ──
+function buildMovieObject() {
+  const title  = document.getElementById('titleInput').value.trim();
+  const n      = parseInt(document.getElementById('numInput').value);
+  const review = document.getElementById('fullReview')?.value ||
+                 document.getElementById('shortNote').value || '';
+  const ytUrl  = document.getElementById('ytUrl')?.value.trim() || '';
+  const dir    = document.getElementById('mDir')?.value.trim() || '';
+  const cast   = document.getElementById('mCast')?.value.trim() || '';
+  const year   = document.getElementById('mYear')?.value.trim() || '';
+  const genre  = document.getElementById('mGenre')?.value.trim() || '';
+  const song   = document.getElementById('mSong')?.value.trim() || '';
+  const artist = document.getElementById('mArtist')?.value.trim() || '';
+  const lyric  = document.getElementById('mLyric')?.value.trim() || '';
+  const compose= document.getElementById('mCompose')?.value.trim() || '';
+
+  const ytFinal = ytUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(title + ' 予告')}`;
+  const ytType  = ytUrl ? 'd' : 's';
+
+  // Build rich description
+  const metaParts = [];
+  if (year)   metaParts.push(`公開年：${year}`);
+  if (dir)    metaParts.push(`監督：${dir}`);
+  if (cast)   metaParts.push(`出演：${cast}`);
+  if (genre)  metaParts.push(`ジャンル：${genre}`);
+  if (song)   metaParts.push(`主題歌：${song}${artist ? '／' + artist : ''}`);
+  if (lyric)  metaParts.push(`作詞：${lyric}`);
+  if (compose) metaParts.push(`作曲：${compose}`);
+
+  const fullDesc = [...metaParts, review].filter(Boolean).join('\n');
+
+  return { n, t: title, d: fullDesc, s: isStar, y: ytFinal, yt: ytType, h: false };
+}
+
+// ── DRAFTS ──
+function getDrafts() {
+  try { return JSON.parse(localStorage.getItem('odc_drafts') || '[]'); }
+  catch(e) { return []; }
+}
+function loadDrafts() {
+  const drafts = getDrafts();
+  if (!drafts.length) return;
+  document.getElementById('draftSection').style.display = '';
+  document.getElementById('draftList').innerHTML = drafts.map(d => `
+    <div class="draft-item">
+      <div class="draft-info">
+        <div class="draft-title">第${d.n}「${esc(d.t)}」</div>
+        <div class="draft-date">下書き保存済み</div>
+      </div>
+      <span class="draft-load" onclick="loadDraft(${d.n})">編集</span>
+      <span class="draft-del" onclick="deleteDraft(${d.n})">削除</span>
+    </div>`).join('');
+}
+function loadDraft(n) {
+  const draft = getDrafts().find(d => d.n === n);
+  if (!draft) return;
+  document.getElementById('titleInput').value = draft.t;
+  document.getElementById('numInput').value = draft.n;
+  if (draft.d) document.getElementById('shortNote').value = draft.d;
+  isStar = draft.s || false;
+  document.getElementById('starBtn').textContent = isStar ? '⭐ お気に入り' : '☆ お気に入りでない';
+  document.getElementById('starBtn').classList.toggle('on', isStar);
+  document.getElementById('fetchBtn').disabled = !draft.t;
+  showToast(`📝「${draft.t}」を読み込みました`);
+}
+function deleteDraft(n) {
+  const drafts = getDrafts().filter(d => d.n !== n);
+  localStorage.setItem('odc_drafts', JSON.stringify(drafts));
+  loadDrafts();
+  showToast('🗑 下書きを削除しました');
+}
+
+// ── HELPERS ──
+function updateCharCount(taId, countId) {
+  const el = document.getElementById(taId);
+  const ct = document.getElementById(countId);
+  if (el && ct) ct.textContent = el.value.length.toLocaleString() + '字';
+}
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function showToast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── INIT ──
+loadSettings();
+</script>
+
+
+</body></html>
