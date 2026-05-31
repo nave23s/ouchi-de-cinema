@@ -1,1 +1,55 @@
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Test</title>
+<style>
+body{background:#0a0a1e;color:#f0ecdf;font-family:sans-serif;padding:20px;max-width:600px;margin:0 auto}
+h1{font-size:18px;margin-bottom:20px;color:#c8a853}
+label{font-size:12px;color:#a0a0c4;display:block;margin-bottom:5px}
+input{width:100%;background:#101026;border:1px solid #2c2c52;border-radius:8px;padding:10px;color:#f0ecdf;font-size:13px;margin-bottom:14px;box-sizing:border-box;font-family:monospace}
+button{width:100%;background:#6c63ff;border:none;border-radius:8px;padding:12px;color:#fff;font-size:14px;cursor:pointer;margin-bottom:14px}
+.result{background:#101026;border:1px solid #2c2c52;border-radius:8px;padding:14px;font-size:12px;line-height:1.8;min-height:80px;white-space:pre-wrap;word-break:break-all}
+.ok{color:#34d399}.err{color:#f87171}.loading{color:#c8a853}
+</style>
+</head>
+<body>
+<h1>Anthropic API Test</h1>
+<label>APIキー（sk-ant-...）</label>
+<input type="password" id="key" placeholder="sk-ant-api03-...">
+<button onclick="test()">テスト実行</button>
+<div class="result" id="result">結果がここに表示されます</div>
+<script>
+async function test(){
+  const key=document.getElementById('key').value.trim();
+  const r=document.getElementById('result');
+  if(!key){r.className='result err';r.textContent='APIキーを入力してください';return;}
+  r.className='result loading';r.textContent='テスト中... (10-20秒)';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:50,
+        messages:[{role:'user',content:'テスト成功とだけ返してください'}]
+      })
+    });
+    const d=await res.json();
+    if(!res.ok){r.className='result err';r.textContent='エラー: '+res.status+'\n'+JSON.stringify(d,null,2);return;}
+    r.className='result ok';
+    r.textContent='成功！\nAI: '+(d.content?.[0]?.text||'なし');
+  }catch(e){
+    r.className='result err';
+    r.textContent='エラー: '+e.message;
+  }
+}
+</script>
+</body>
+</html>
