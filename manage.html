@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>管理画面 | オウチ de cinema</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04040e;--s1:#0a0a1e;--s2:#101026;--s3:#161632;
+  --bd:#1e1e3c;--bd2:#2c2c50;
+  --gold:#c8a853;--gb:#e8c878;--gd:#7a6030;
+  --tx:#f4f0e4;--sub:#a0a0c4;--dim:#505080;
+  --acc:#6c63ff;--grn:#34d399;--red:#f87171;--or:#fb923c;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:'Noto Serif JP',serif;min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(4,4,14,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:calc(var(--safe-t)+10px) 15px 10px}
+.nav-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);flex:1}
+.nav-home{font-size:11px;color:var(--dim);padding:5px 10px;border:1px solid var(--bd);border-radius:16px;text-decoration:none}
+
+/* STATS */
+.stats-row{display:flex;gap:8px;margin-bottom:10px}
+.stat-chip{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:8px 10px;text-align:center}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;display:block;margin-bottom:2px}
+.stat-lbl{font-size:9px;color:var(--dim);letter-spacing:.06em}
+.num-total{color:var(--gold)}
+.num-show{color:var(--grn)}
+.num-hide{color:var(--red)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:8px}
+.si-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:13px;pointer-events:none}
+.si{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:9px 10px 9px 30px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:14px;outline:none;-webkit-appearance:none}
+.si::placeholder{color:var(--dim)}
+.si:focus{border-color:var(--gd)}
+
+/* FILTER */
+.filter-row{display:flex;gap:5px}
+.fc{flex:1;padding:6px;border-radius:8px;border:1px solid var(--bd);font-size:11px;color:var(--dim);cursor:pointer;font-family:'Noto Serif JP',serif;background:transparent;text-align:center;transition:all .15s}
+.fc.on{background:rgba(108,99,255,.12);border-color:rgba(108,99,255,.3);color:var(--acc)}
+
+/* SAVE BTN */
+.save-bar{padding:10px 15px;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center;background:rgba(52,211,153,.05)}
+.save-hint{font-size:11px;color:var(--sub);flex:1;line-height:1.4}
+.save-btn{flex-shrink:0;background:linear-gradient(135deg,#16a34a,var(--grn));border:none;border-radius:9px;padding:9px 16px;color:#fff;font-size:12px;font-weight:500;cursor:pointer;font-family:'Noto Serif JP',serif;white-space:nowrap}
+.save-btn:active{transform:scale(.96)}
+.change-badge{background:rgba(251,146,60,.15);border:1px solid rgba(251,146,60,.3);border-radius:12px;padding:2px 8px;font-size:10px;color:var(--or);display:none}
+.change-badge.show{display:inline-block}
+
+/* MOVIE LIST */
+.movie-list{padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+
+/* MOVIE ROW */
+.mrow{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:10px 12px;transition:all .15s}
+.mrow.hidden-row{opacity:.45;background:rgba(248,113,113,.04);border-color:rgba(248,113,113,.15)}
+.mrow-info{flex:1;min-width:0}
+.mrow-num{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:2px}
+.mrow-title{font-size:13px;font-weight:500;color:var(--tx);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow-desc{font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+
+/* TOGGLE BUTTON */
+.toggle-btn{flex-shrink:0;width:70px;padding:7px 6px;border-radius:8px;font-size:11px;font-family:'Noto Serif JP',serif;cursor:pointer;border:1px solid;transition:all .15s;text-align:center;font-weight:500}
+.toggle-btn.showing{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.28);color:var(--grn)}
+.toggle-btn.hiding{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25);color:var(--red)}
+.toggle-btn:active{transform:scale(.93)}
+
+/* PAGER */
+.pager{padding:12px 12px calc(var(--safe-b)+20px);display:flex;align-items:center;justify-content:center;gap:8px}
+.pg-btn{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:9px 14px;color:var(--sub);font-size:12px;cursor:pointer;font-family:'Noto Serif JP',serif}
+.pg-btn:active{color:var(--gold)}
+.pg-btn:disabled{opacity:.25;pointer-events:none}
+.pg-inf{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;min-width:60px;text-align:center}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--dim);font-size:13px}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--safe-b)+24px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--s3);border:1px solid var(--bd2);border-radius:20px;padding:9px 18px;font-size:12px;color:var(--tx);opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* LOADING */
+.loading{text-align:center;padding:60px 20px;color:var(--dim);font-size:13px}
+.spin{display:inline-block;width:20px;height:20px;border:2px solid rgba(200,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-top">
+    <span class="nav-logo">⚙️ 管理画面</span>
+    <a href="/" class="nav-home">← サイトへ</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-num num-total" id="statTotal">—</span>
+      <span class="stat-lbl">総作品数</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-num num-show" id="statShow">—</span>
+      <span class="stat-lbl">表示中</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-num num-hide" id="statHide">—</span>
+      <span class="stat-lbl">非表示</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <span class="si-ico">🔍</span>
+    <input class="si" id="si" type="search" placeholder="タイトルで検索…" oninput="onSearch()" autocorrect="off" spellcheck="false">
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-row">
+    <button class="fc on" data-f="all" onclick="setFilter(this)">すべて</button>
+    <button class="fc" data-f="show" onclick="setFilter(this)">👁 表示中</button>
+    <button class="fc" data-f="hide" onclick="setFilter(this)">🙈 非表示</button>
+  </div>
+</div>
+
+<!-- Save bar -->
+<div class="save-bar">
+  <span class="save-hint">変更した内容をGitHubにアップロードするとサイトに反映されます<br>
+    <span class="change-badge" id="changeBadge">未保存の変更あり</span>
+  </span>
+  <button class="save-btn" id="saveBtn" onclick="saveChanges()">⬇ 保存してDL</button>
+</div>
+
+<!-- Movie list -->
+<div id="content">
+  <div class="loading">
+    <div class="spin"></div><br>読み込み中…
+  </div>
+</div>
+
+<div class="pager" id="pager" style="display:none">
+  <button class="pg-btn" id="pgPrev" onclick="prevPage()">← 前へ</button>
+  <span class="pg-inf" id="pgInf"></span>
+  <button class="pg-btn" id="pgNext" onclick="nextPage()">次へ →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let ALL = [];       // 全作品（元データ）
+let filtered = [];  // フィルター後
+let changed = false;
+let page = 0;
+let flt = 'all';
+let q = '';
+const PER = 40;
+
+// Load
+fetch('movies.json')
+  .then(r => r.json())
+  .then(data => {
+    ALL = data.map(m => ({ ...m, h: !!m.h }));
+    filtered = [...ALL].reverse();
+    updateStats();
+    render();
+  })
+  .catch(() => {
+    document.getElementById('content').innerHTML =
+      '<div class="empty">movies.jsonの読み込みに失敗しました</div>';
+  });
+
+function updateStats() {
+  const total = ALL.length;
+  const hidden = ALL.filter(m => m.h).length;
+  document.getElementById('statTotal').textContent = total.toLocaleString();
+  document.getElementById('statShow').textContent = (total - hidden).toLocaleString();
+  document.getElementById('statHide').textContent = hidden.toLocaleString();
+}
+
+function applyFilter() {
+  let d = [...ALL].reverse();
+  if (q) d = d.filter(m => m.t.toLowerCase().includes(q) || (m.d||'').toLowerCase().includes(q));
+  if (flt === 'show') d = d.filter(m => !m.h);
+  if (flt === 'hide') d = d.filter(m => m.h);
+  filtered = d;
+  page = 0;
+  render();
+}
+
+function render() {
+  const total = filtered.length;
+  const pages = Math.max(1, Math.ceil(total / PER));
+  if (page >= pages) page = pages - 1;
+  const slice = filtered.slice(page * PER, (page + 1) * PER);
+
+  if (!slice.length) {
+    document.getElementById('content').innerHTML = '<div class="empty">該当する作品がありません</div>';
+    document.getElementById('pager').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('content').innerHTML =
+    '<div class="movie-list">' +
+    slice.map((m, i) => `
+      <div class="mrow ${m.h ? 'hidden-row' : ''}" id="row-${m.n}" style="animation:fu .18s ease ${i*6}ms both">
+        <div class="mrow-info">
+          <div class="mrow-num">第 ${m.n} 作品</div>
+          <div class="mrow-title">${esc(m.t)}</div>
+          ${m.d ? `<div class="mrow-desc">${esc(m.d.substring(0,50))}</div>` : ''}
+        </div>
+        <button class="toggle-btn ${m.h ? 'hiding' : 'showing'}"
+          id="btn-${m.n}" onclick="toggle(${m.n})">
+          ${m.h ? '🙈 非表示' : '👁 表示中'}
+        </button>
+      </div>`
+    ).join('') +
+    '</div>';
+
+  // Pager
+  document.getElementById('pager').style.display = 'flex';
+  document.getElementById('pgInf').textContent = `${page+1} / ${pages}`;
+  document.getElementById('pgPrev').disabled = page === 0;
+  document.getElementById('pgNext').disabled = page >= pages - 1;
+}
+
+// スタイルアニメーション
+const styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(styleEl);
+
+function toggle(n) {
+  const movie = ALL.find(m => m.n === n);
+  if (!movie) return;
+
+  movie.h = !movie.h;
+  changed = true;
+
+  // Update UI instantly
+  const row = document.getElementById(`row-${n}`);
+  const btn = document.getElementById(`btn-${n}`);
+  if (row && btn) {
+    row.classList.toggle('hidden-row', movie.h);
+    btn.className = `toggle-btn ${movie.h ? 'hiding' : 'showing'}`;
+    btn.textContent = movie.h ? '🙈 非表示' : '👁 表示中';
+  }
+
+  updateStats();
+  document.getElementById('changeBadge').classList.toggle('show', changed);
+  showToast(movie.h ? `🙈「${movie.t}」を非表示にしました` : `👁「${movie.t}」を表示に戻しました`);
+}
+
+function saveChanges() {
+  // Sort by number and download
+  const sorted = [...ALL].sort((a, b) => a.n - b.n);
+  const blob = new Blob([JSON.stringify(sorted, null, 0)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'movies.json';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  changed = false;
+  document.getElementById('changeBadge').classList.remove('show');
+  showToast('⬇ movies.json をダウンロードしました！GitHubにアップロードしてください。');
+}
+
+let stimer;
+function onSearch() {
+  clearTimeout(stimer);
+  stimer = setTimeout(() => {
+    q = document.getElementById('si').value.trim().toLowerCase();
+    applyFilter();
+  }, 160);
+}
+
+function setFilter(el) {
+  document.querySelectorAll('.fc').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  flt = el.dataset.f;
+  applyFilter();
+}
+
+function prevPage() { if(page>0){page--;render();window.scrollTo({top:0,behavior:'smooth'});} }
+function nextPage() { const p=Math.ceil(filtered.length/PER)-1; if(page<p){page++;render();window.scrollTo({top:0,behavior:'smooth'});} }
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function showToast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
