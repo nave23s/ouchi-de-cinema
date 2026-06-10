@@ -10,13 +10,13 @@
 <script type="application/ld+json" id="jsonld">{}</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#05050f;--s1:#0a0a1e;--s2:#101028;--s3:#16163a;--bd:#1e1e3c;--bd2:#2c2c50;--gold:#c8a853;--gb:#e8c878;--gd:#7a6030;--tx:#f4f0e4;--sub:#a0a0c4;--dim:#505080;--acc:#6c63ff;--grn:#34d399;--red:#f87171;--pk:#f472b6;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+:root{--bg:#faf8f4;--s1:#ffffff;--s2:#f2ede4;--s3:#e8e0d0;--bd:#ddd5c4;--bd2:#c8bfac;--gold:#9a6c10;--gb:#c08c28;--gd:#7a5012;--tx:#1a1510;--sub:#4a4030;--dim:#8a7c68;--acc:#c05a10;--grn:#1e7040;--red:#b83020;--pk:#b84060;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--tx);font-family:'Noto Serif JP',serif;min-height:100vh}
 a{color:inherit;text-decoration:none}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(5,5,15,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:calc(var(--safe-t)+10px) 15px 10px;display:flex;align-items:center;gap:10px}
+.nav{position:sticky;top:0;z-index:100;background:rgba(250,248,244,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:calc(var(--safe-t)+10px) 15px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(60,40,10,.07)}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);flex:1}
 .nav-home{font-size:11px;color:var(--dim);padding:5px 10px;border:1px solid var(--bd);border-radius:16px}
 
@@ -42,10 +42,10 @@ a{color:inherit;text-decoration:none}
 
 /* Movie cards */
 .movies{padding:0 12px;display:flex;flex-direction:column;gap:6px}
-.mcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;animation:fu .2s ease both}
+.mcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;animation:fu .2s ease both;box-shadow:0 2px 8px rgba(60,40,10,.06)}
 @keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .mcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;background:linear-gradient(180deg,transparent,var(--gold),transparent);transition:opacity .15s}
-.mcard:active{background:var(--s2);transform:scale(.985)}
+.mcard:hover{background:var(--s2);box-shadow:0 4px 16px rgba(60,40,10,.12);transform:translateY(-1px)}.mcard:active{background:var(--s3);transform:scale(.985)}
 .mcard.has-star::before{opacity:1}
 .mcard-num{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:2px}
 .mcard-title{font-size:14px;font-weight:500;color:var(--tx);line-height:1.45;margin-bottom:4px}
@@ -53,6 +53,12 @@ a{color:inherit;text-decoration:none}
 .mcard-footer{display:flex;align-items:center;gap:6px;margin-top:7px}
 .tag-star{font-size:9px;color:var(--gold)}
 .tag-yt{font-size:9px;padding:2px 7px;border-radius:7px;background:rgba(200,168,83,.1);border:1px solid rgba(200,168,83,.2);color:var(--gold)}
+
+/* Genre dropdown */
+.genre-wrap{padding:0 15px 8px}
+.genre-sel{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:10px 14px;color:var(--tx);font-family:'Noto Serif JP',serif;font-size:14px;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7c68' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;box-shadow:0 1px 4px rgba(60,40,10,.06)}
+.genre-sel:focus{border-color:var(--gold)}
+.genre-sel option{background:var(--s2);color:var(--tx)}
 
 /* Pager */
 .pager{padding:14px 12px calc(var(--safe-b)+20px);display:flex;align-items:center;justify-content:center;gap:8px}
@@ -96,7 +102,6 @@ a{color:inherit;text-decoration:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* grain */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4}
 </style>
 </head>
 <body>
@@ -121,6 +126,23 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="chip" data-f="star" onclick="setFilter(this)">⭐ お気に入り</button>
     <button class="chip" data-f="yt" onclick="setFilter(this)">▶ 予告あり</button>
     <button class="chip" data-f="new" onclick="setFilter(this)">🆕 最新順</button>
+  </div>
+  <div class="genre-wrap">
+    <select class="genre-sel" id="genreSel" onchange="setGenre(this.value)">
+      <option value="">🎬 ジャンルで絞り込む</option>
+      <option value="邦画">🇯🇵 邦画</option>
+      <option value="洋画">🌍 洋画</option>
+      <option value="アニメ">✨ アニメ</option>
+      <option value="アクション">💥 アクション</option>
+      <option value="サスペンス">🔍 サスペンス・ミステリ</option>
+      <option value="ホラー">👻 ホラー</option>
+      <option value="コメディ">😄 コメディ</option>
+      <option value="恋愛">💕 恋愛・ロマンス</option>
+      <option value="SF">🚀 SF・ファンタジー</option>
+      <option value="ドキュメンタリー">📹 ドキュメンタリー</option>
+      <option value="音楽">🎵 音楽・ライブ</option>
+      <option value="グルメ">🍽️ グルメ・料理</option>
+    </select>
   </div>
   <div class="movies" id="movieList"></div>
   <div class="pager">
@@ -167,7 +189,24 @@ let filtered = [];
 let page = 0;
 let flt = 'all';
 let q = '';
+let currentGenre = '';
 const PER = 30;
+
+// ジャンルキーワード定義（タイトル＋説明文でマッチ）
+const GENRE_PATTERNS = {
+  '邦画':         (t, d) => /邦画/.test(t + d),
+  '洋画':         (t, d) => /原題[：:]|原題：|原題:/.test(d),
+  'アニメ':       (t, d) => /アニメ|劇場版アニメ/.test(t + d),
+  'アクション':   (t, d) => /アクション/.test(t + d),
+  'サスペンス':   (t, d) => /サスペンス|ミステリ|謎解き/.test(t + d),
+  'ホラー':       (t, d) => /ホラー|恐怖|心霊/.test(t + d),
+  'コメディ':     (t, d) => /コメディ|笑い|爆笑/.test(t + d),
+  '恋愛':         (t, d) => /恋愛|ラブ|ロマンス|恋する|恋に/.test(t + d),
+  'SF':           (t, d) => /\bSF\b|宇宙|タイムトラベル|ロボット|AI/.test(t + d),
+  'ドキュメンタリー': (t, d) => /ドキュメンタリー/.test(t + d),
+  '音楽':         (t, d) => /音楽映画|ミュージカル|コンサート|ライブ/.test(t + d),
+  'グルメ':       (t, d) => /グルメ|料理|食|飯|食事/.test(t + d),
+};
 
 // Load movies.json
 fetch('movies.json')
@@ -207,8 +246,11 @@ function renderList() {
   if (page >= pages) page = pages - 1;
   const slice = filtered.slice(page * PER, (page + 1) * PER);
 
+  const maxN = MOVIES.length ? Math.max(...MOVIES.map(m => m.n)) : 0;
   document.getElementById('listCount').textContent =
-    `${total.toLocaleString()} 作品 / 全 ${MOVIES.length.toLocaleString()} 本`;
+    currentGenre
+      ? `${total.toLocaleString()} 作品（${currentGenre}） / 全 No.${maxN.toLocaleString()}`
+      : `全 No.${maxN.toLocaleString()} まで登録 / ${total.toLocaleString()} 作品表示中`;
   document.getElementById('pgInf').textContent = `${page+1} / ${pages}`;
   document.getElementById('pgPrev').disabled = page === 0;
   document.getElementById('pgNext').disabled = page >= pages - 1;
@@ -244,12 +286,20 @@ function setFilter(el) {
   applyFilter();
 }
 
+function setGenre(genre) {
+  currentGenre = genre;
+  page = 0;
+  applyFilter();
+}
+
 function applyFilter() {
-  let d = [...MOVIES];
-  if (flt === 'new') { d = d.reverse(); }
-  else { d = d.reverse(); }
+  let d = [...MOVIES].reverse(); // 常に新しい順をベースに
   if (flt === 'star') d = d.filter(m => m.s);
   if (flt === 'yt')   d = d.filter(m => m.yt === 'd');
+  if (currentGenre && GENRE_PATTERNS[currentGenre]) {
+    const matchFn = GENRE_PATTERNS[currentGenre];
+    d = d.filter(m => matchFn(m.t, m.d || ''));
+  }
   if (q) d = d.filter(m => m.t.toLowerCase().includes(q) || (m.d||'').toLowerCase().includes(q));
   filtered = d;
   page = 0;
