@@ -42,17 +42,19 @@ a{color:inherit;text-decoration:none}
 
 /* Movie cards */
 .movies{padding:0 12px;display:flex;flex-direction:column;gap:6px}
-.mcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;animation:fu .2s ease both;box-shadow:0 2px 8px rgba(60,40,10,.06)}
+.mcard{display:block;background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;animation:fu .2s ease both;box-shadow:0 2px 8px rgba(60,40,10,.06)}
 @keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .mcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;background:linear-gradient(180deg,transparent,var(--gold),transparent);transition:opacity .15s}
 .mcard:hover{background:var(--s2);box-shadow:0 4px 16px rgba(60,40,10,.12);transform:translateY(-1px)}.mcard:active{background:var(--s3);transform:scale(.985)}
 .mcard.has-star::before{opacity:1}
+.mcard.mcard-soon{opacity:.6}
 .mcard-num{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:2px}
 .mcard-title{font-size:14px;font-weight:500;color:var(--tx);line-height:1.45;margin-bottom:4px}
 .mcard-desc{font-size:11px;color:var(--sub);line-height:1.6;font-weight:300;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .mcard-footer{display:flex;align-items:center;gap:6px;margin-top:7px}
 .tag-star{font-size:9px;color:var(--gold)}
 .tag-yt{font-size:9px;padding:2px 7px;border-radius:7px;background:rgba(200,168,83,.1);border:1px solid rgba(200,168,83,.2);color:var(--gold)}
+.tag-soon{font-size:9px;padding:2px 7px;border-radius:7px;background:rgba(138,124,104,.1);border:1px solid rgba(138,124,104,.2);color:var(--dim)}
 
 /* Genre dropdown */
 .genre-wrap{padding:0 15px 8px}
@@ -192,6 +194,14 @@ let q = '';
 let currentGenre = '';
 const PER = 30;
 
+// お手本6本は /movies/[番号]/、slugがある作品は /movies/[slug]/、それ以外は未公開
+const SKIP_N = new Set([303, 101, 2176, 2719, 1239, 1100]);
+function moviePath(m) {
+  if (SKIP_N.has(m.n)) return `/movies/${m.n}/`;
+  if (m.slug) return `/movies/${m.slug}/`;
+  return null;
+}
+
 // ジャンルキーワード定義（タイトル＋説明文でマッチ）
 const GENRE_PATTERNS = {
   '邦画':         (t, d) => /邦画/.test(t + d),
@@ -258,15 +268,20 @@ function renderList() {
   document.getElementById('movieList').innerHTML = slice.map((m, i) => {
     const hasStar = m.s;
     const hasYt = m.yt === 'd';
-    return `<div class="mcard ${hasStar?'has-star':''}" onclick="showDetail(MOVIES.find(x=>x.n===${m.n}))" style="animation-delay:${i*8}ms">
+    const path = moviePath(m);
+    const inner = `
       <div class="mcard-num">第 ${m.n} 作品</div>
       <div class="mcard-title">${esc(m.t)}</div>
       ${m.d ? `<div class="mcard-desc">${esc(m.d)}</div>` : ''}
       <div class="mcard-footer">
         ${hasStar ? '<span class="tag-star">⭐ お気に入り</span>' : ''}
         ${hasYt ? '<span class="tag-yt">▶ 予告あり</span>' : ''}
-      </div>
-    </div>`;
+        ${!path ? '<span class="tag-soon">準備中</span>' : ''}
+      </div>`;
+    if (path) {
+      return `<a class="mcard ${hasStar?'has-star':''}" href="${path}" style="animation-delay:${i*8}ms">${inner}</a>`;
+    }
+    return `<div class="mcard mcard-soon ${hasStar?'has-star':''}" onclick="showDetail(MOVIES.find(x=>x.n===${m.n}))" style="animation-delay:${i*8}ms">${inner}</div>`;
   }).join('');
 }
 
