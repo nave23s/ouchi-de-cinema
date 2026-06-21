@@ -1,3 +1,10 @@
 node_modules/
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 *.log
+*.log.bak
+
+# 作業用一時ファイル
+form_responses.csv
+movies.json.backup-*
+_preview_server.js
