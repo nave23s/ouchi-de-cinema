@@ -52,6 +52,21 @@ function metaDesc(jaTitle) {
   return `映画『${jaTitle}』の見どころを音楽の視点でレビュー。視聴方法・Amazon情報まで。ワンクリックで今すぐ視聴できます。`.slice(0, 100);
 }
 
+// OGP/Twitter Card 用 description（dフィールド冒頭120字、なければ固定文）
+function ogDesc(d, jaTitle) {
+  if (d && d.trim()) {
+    const text = d.replace(/https?:\/\/\S+/g, '')
+                  .replace(/\n/g, ' ')
+                  .replace(/\s+/g, ' ')
+                  .trim()
+                  .slice(0, 120);
+    if (text.length >= 20) return text;
+  }
+  return `映画『${jaTitle}』の見どころを音楽の視点でレビュー。視聴方法・予告動画・サントラ情報まで。`;
+}
+
+const OGP_IMAGE = 'https://ouchi-de-cinema.com/ogp.jpg';
+
 function generateHtml(movie) {
   const { n, t, d, y, english_title, slug } = movie;
   const jaTitle  = t;
@@ -59,6 +74,7 @@ function generateHtml(movie) {
   const pageUrl  = `https://ouchi-de-cinema.com/movies/${slug}/`;
   const titleTag = seoTitle(jaTitle, enTitle);
   const desc     = metaDesc(jaTitle);
+  const ogDescription = ogDesc(d, jaTitle);
 
   const reviewHtml   = formatReview(d);
   const trailerUrl   = y || `https://www.youtube.com/results?search_query=${encodeURIComponent(jaTitle + ' 予告')}`;
@@ -79,11 +95,13 @@ function generateHtml(movie) {
 <meta property="og:type"        content="article">
 <meta property="og:url"         content="${pageUrl}">
 <meta property="og:title"       content="${esc(titleTag)}">
-<meta property="og:description" content="${esc(desc)}">
+<meta property="og:description" content="${esc(ogDescription)}">
+<meta property="og:image"       content="${OGP_IMAGE}">
 <meta property="og:site_name"   content="オウチ de CINEMA">
-<meta name="twitter:card"       content="summary">
+<meta name="twitter:card"       content="summary_large_image">
 <meta name="twitter:title"      content="${esc(titleTag)}">
-<meta name="twitter:description" content="${esc(desc)}">
+<meta name="twitter:description" content="${esc(ogDescription)}">
+<meta name="twitter:image"      content="${OGP_IMAGE}">
 
 <script type="application/ld+json">
 {
