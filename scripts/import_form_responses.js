@@ -278,6 +278,30 @@ async function main() {
     console.log(`  ✓ n=${u.n} 「${u.title}」`);
   });
 
+  // --- HTML ページ再生成 ---
+  const { generateHtml } = require('./generate_slug_pages');
+  const MOVIES_DIR = path.join(__dirname, '..', 'movies');
+  let htmlUpdated = 0;
+
+  console.log('\n【HTML再生成】');
+  for (const u of updates) {
+    const slug = u.entry.slug;
+    if (!slug) {
+      console.log(`  ⚠ n=${u.n} 「${u.title}」: slug未設定 → スキップ`);
+      continue;
+    }
+    const dir  = path.join(MOVIES_DIR, slug);
+    const file = path.join(dir, 'index.html');
+    if (!fs.existsSync(dir)) {
+      console.log(`  ⚠ n=${u.n} 「${u.title}」: movies/${slug}/ が存在しない → スキップ`);
+      continue;
+    }
+    fs.writeFileSync(file, generateHtml(u.entry), 'utf8');
+    console.log(`  ✓ movies/${slug}/index.html を再生成`);
+    htmlUpdated++;
+  }
+  console.log(`\n✓ ${htmlUpdated}件のHTMLページを再生成しました。`);
+
   // --- pending_for_form.txt を再生成 ---
   writePendingFile(arr);
 }

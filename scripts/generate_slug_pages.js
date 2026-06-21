@@ -36,7 +36,6 @@ function formatReview(d) {
     .split('\n')
     .map(l => l.trim())
     .filter(l => l && !/^https?:\/\//i.test(l))
-    .slice(0, 8)
     .map(l => `      <p>${esc(l)}</p>`)
     .join('\n');
   return paras || '<p>（レビュー準備中）</p>';
@@ -342,4 +341,8 @@ function main() {
   return { generated, skipped, total: targets.length };
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { generateHtml };
