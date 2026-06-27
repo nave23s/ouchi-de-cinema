@@ -7,6 +7,7 @@ const path = require('path');
 
 const ROOT         = path.resolve(__dirname, '..');
 const AFFILIATE_ID = 'ouchidecinama-22';
+const CRANKIN_URL  = 'https://t.afi-b.com/visit.php?a=Q16300l-E524044z&p=09852565';
 const SKIP_N       = new Set([303, 101, 2176, 2719, 1239, 1100]);
 
 function esc(s) {
@@ -200,7 +201,14 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .vod-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .vod-btn { display:flex; align-items:center; gap:10px; background:var(--s1); border:1px solid var(--bd); border-radius:11px; padding:14px 14px; transition:all .2s; }
 .vod-btn:hover { background:var(--s2); border-color:var(--bd2); transform:translateY(-2px); }
-.vod-icon { font-size:14px; width:24px; text-align:center; flex-shrink:0; }
+.vod-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:var(--gold); flex-shrink:0; border:2px solid; }
+.vod-icon-unext   { background:linear-gradient(135deg,#fff,#ececec); border-color:#000; }
+.vod-icon-netflix { background:linear-gradient(135deg,#fff,#fbe4e2); border-color:#e50914; }
+.vod-icon-hulu    { background:linear-gradient(135deg,#fff,#e2f4ea); border-color:#10b35f; }
+.vod-icon-prime   { background:linear-gradient(135deg,#fff,#e1f0fa); border-color:#1f9fe5; }
+.vod-icon-crankin { background:linear-gradient(135deg,#fff,#fbe4e0); border-color:#d4341f; }
+.vod-btn-wide { grid-column:1 / -1; }
+.vod-badge { font-size:9px; padding:2px 7px; border-radius:8px; background:rgba(212,52,31,.12); color:#d4341f; border:1px solid rgba(212,52,31,.3); font-family:'JetBrains Mono',monospace; letter-spacing:.05em; white-space:nowrap; }
 .vod-name { font-size:12px; font-weight:600; color:var(--tx); flex:1; }
 .vod-action { font-size:10px; color:var(--dim); white-space:nowrap; }
 .amazon-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
@@ -300,23 +308,29 @@ ${reviewHtml}
     <div class="sec-label">Watch Now — どこで観れる？</div>
     <div class="vod-grid">
       <a href="https://video.unext.jp/search?query=${encodeURIComponent(jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon">▶</span>
+        <span class="vod-icon vod-icon-unext">U</span>
         <span class="vod-name">U-NEXT</span>
         <span class="vod-action">で観る →</span>
       </a>
       <a href="${esc(primeUrl)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon">A</span>
+        <span class="vod-icon vod-icon-prime">P</span>
         <span class="vod-name">Amazon Prime</span>
         <span class="vod-action">で観る →</span>
       </a>
       <a href="https://www.netflix.com/search?q=${encodeURIComponent(enTitle || jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon">N</span>
+        <span class="vod-icon vod-icon-netflix">N</span>
         <span class="vod-name">Netflix</span>
         <span class="vod-action">で観る →</span>
       </a>
       <a href="https://www.hulu.jp/search?q=${encodeURIComponent(jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon">H</span>
+        <span class="vod-icon vod-icon-hulu">H</span>
         <span class="vod-name">Hulu</span>
+        <span class="vod-action">で観る →</span>
+      </a>
+      <a href="${CRANKIN_URL}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn vod-btn-wide">
+        <span class="vod-icon vod-icon-crankin">ク</span>
+        <span class="vod-name">クランクインビデオ</span>
+        <span class="vod-badge">新作に強い</span>
         <span class="vod-action">で観る →</span>
       </a>
     </div>
