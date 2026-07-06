@@ -59,10 +59,44 @@
 - Amazonアソシエイト：ouchidecinama-22
 - 作業環境：Windows + iPhone。Claude Code起動時は必ず `cd C:\Users\USER\ouchi-de-cinema` してから作業する
 
+## movies.json フィールド対応表（実構造・変更禁止）
+
+| フィールド名 | 意味 | 型 | 備考 |
+|---|---|---|---|
+| `n` | 管理番号 | number | 一意のID。重複禁止 |
+| `t` | タイトル（日本語） | string | 表示用タイトル |
+| `d` | レビュー本文 | string | 手書きレビュー。空=未記入 |
+| `s` | 特集フラグ | boolean | true=長文レビューあり |
+| `y` | YouTube予告編URL | string | 通常は検索URL |
+| `yt` | YouTube URL種別 | string | `"s"`=検索URL / `"d"`=直接URL |
+| `english_title` | 英語タイトル | string | スラッグ生成の元になる |
+| `slug` | URLスラッグ | string | 存在=公開済み。例: `inception-2010` |
+| `series` | シリーズ名 | string | シリーズものに付与 |
+| `episode` | エピソード番号 | string | 例: `S1E1`。シリーズものに付与 |
+
+**新規追加フィールド（今後追記する項目）：**
+
+| フィールド名 | 意味 | 型 |
+|---|---|---|
+| `director` | 監督名 | string |
+| `genre` | ジャンル | array |
+| `music.composer` | 作曲家（劇伴） | array |
+| `music.artists` | 主題歌アーティスト | array |
+| `catchphrase` | キャッチフレーズ | string |
+| `verdict` | レビュー冒頭結論文 | string |
+| `faq` | FAQ | array |
+| `seo.meta_title` | SEOタイトル | string |
+| `seo.meta_description` | meta description | string |
+| `review_generated` | AI生成済みフラグ | boolean |
+| `vod_services` | 配信VODサービス一覧 | array |
+| `vod_checked` | VOD確認日 | string |
+
+**鉄則：既存フィールドの改名は絶対にしない。新情報は新フィールドとして追加する。**
+
 ## 現状（2026-06-22時点）
 
 - 公開：803本
-- データ：movies.json（2489件）。各エントリ `{n,t,d,s,y,yt,english_title,slug,h}`（シリーズものは `series`,`episode` フィールドも付与）
+- データ：movies.json（2489件）。各エントリ `{n,t,d,s,y,yt,english_title,slug}`（シリーズものは `series`,`episode` フィールドも付与）
 - 著者本人の長文レビュー14本を公開済み（n=2720〜2730等）
 - サイトの数字は「3,000本以上」に統一、Aboutを書き手プロフィールに変更済み
 - **n重複227組（475件）を解消済み**（248件のnを再割当、公開済み21件のREVIEW No.ラベルも更新）
