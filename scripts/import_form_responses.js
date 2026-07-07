@@ -1,327 +1,479 @@
+'use strict';
 /**
  * scripts/import_form_responses.js
  *
- * Google Formsの回答CSVをmovies.jsonのdフィールドに取り込む。
+ * Google Forms の回答CSV を movies.json に取り込む。
+ *
+ * 対応形式:
+ *   【新形式・9列】タイムスタンプ / 映画タイトル / 公開年 / レビュー本文 /
+ *                  監督 / 作曲家(劇伴) / 主題歌・挿入歌 / ジャンル / 備考
+ *   【旧形式・3列】タイムスタンプ / 作品名(n=XXX可) / レビュー本文
  *
  * 使い方:
- *   node scripts/import_form_responses.js [CSVファイルパス]
- *   ※ファイルパス省略時は ./form_responses.csv を使用
- *
- * CSV列構成 (Google Forms エクスポート形式):
- *   列1: タイムスタンプ
- *   列2: 作品名 (例: 「シン・ゴジラ(n=156)」または「シン・ゴジラ」)
- *   列3: レビュー本文
+ *   node scripts/import_form_responses.js [--preview] [CSVファイルパス]
+ *   --preview : プレビューのみ。movies.json・マスターへの書き込みをしない
+ *   ファイルパス省略時: ./form_responses.csv
  */
 
-'use strict';
-
-const fs = require('fs');
+const fs   = require('fs');
 const path = require('path');
-const readline = require('readline');
+const rl   = require('readline');
 
-const MOVIES_FILE = path.join(__dirname, '..', 'movies.json');
-const CSV_FILE = process.argv[2] || path.join(__dirname, '..', 'form_responses.csv');
-const PENDING_FILE = path.join(__dirname, '..', 'pending_for_form.txt');
+const ROOT        = path.resolve(__dirname, '..');
+const MOVIES_FILE = path.join(ROOT, 'movies.json');
+const MASTERS_DIR = path.join(ROOT, 'data', 'masters');
+const IMPORT_LOG  = path.join(ROOT, 'data', 'import-log.json');
 
-// ── CSV パーサー (RFC 4180 準拠・改行・ダブルクォート対応) ──────────────────
+const args        = process.argv.slice(2);
+const PREVIEW     = args.includes('--preview');
+const CSV_FILE    = args.find(a => !a.startsWith('-')) ||
+                    path.join(ROOT, 'form_responses.csv');
+
+// ── CSV パーサー (RFC 4180・BOM対応) ─────────────────────────────────────────
 
 function parseCsv(text) {
   const rows = [];
-  let col = '';
-  let row = [];
-  let inQuote = false;
-
-  // BOM除去
+  let col = '', row = [], inQ = false;
   if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-  // 末尾に改行を保証
   if (!text.endsWith('\n')) text += '\n';
-
   for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    const next = text[i + 1];
-
-    if (inQuote) {
-      if (ch === '"' && next === '"') {
-        col += '"';
-        i++;
-      } else if (ch === '"') {
-        inQuote = false;
-      } else {
-        col += ch;
-      }
+    const ch = text[i], nx = text[i + 1];
+    if (inQ) {
+      if (ch === '"' && nx === '"') { col += '"'; i++; }
+      else if (ch === '"') inQ = false;
+      else col += ch;
     } else {
-      if (ch === '"') {
-        inQuote = true;
-      } else if (ch === ',') {
-        row.push(col);
-        col = '';
-      } else if (ch === '\r' && next === '\n') {
-        row.push(col);
-        col = '';
-        rows.push(row);
-        row = [];
-        i++;
-      } else if (ch === '\n') {
-        row.push(col);
-        col = '';
-        rows.push(row);
-        row = [];
-      } else {
-        col += ch;
-      }
+      if      (ch === '"')                   inQ = true;
+      else if (ch === ',')                   { row.push(col); col = ''; }
+      else if (ch === '\r' && nx === '\n')   { row.push(col); col = ''; rows.push(row); row = []; i++; }
+      else if (ch === '\n')                  { row.push(col); col = ''; rows.push(row); row = []; }
+      else                                   col += ch;
     }
   }
-
-  return rows.filter(r => r.some(c => c.trim() !== ''));
+  return rows.filter(r => r.some(c => c.trim()));
 }
 
-// ── nとタイトルの抽出 ───────────────────────────────────────────────────────
+// ── フォーマット自動検出 ──────────────────────────────────────────────────────
 
-function parseMovieField(raw) {
-  raw = raw.trim();
-  // 「タイトル(n=XXX)」または「タイトル（n=XXX）」形式を検出
-  const m = raw.match(/^(.+?)\s*[（(]n=(\d+)[）)]\s*$/);
-  if (m) {
-    return { title: m[1].trim(), n: parseInt(m[2], 10) };
+function detectFormat(dataRows) {
+  // dataRows[0] = 最初のデータ行(ヘッダースキップ済み)
+  if (!dataRows.length) return 'unknown';
+  const r = dataRows[0];
+  // 新形式: col[2] が 4桁の年 かつ col数 >= 4
+  if (r.length >= 4 && /^\d{4}$/.test((r[2] || '').trim())) return 'new';
+  return 'legacy';
+}
+
+// ── 正規化・パース ────────────────────────────────────────────────────────────
+
+function normalizeTitle(s) {
+  return (s || '').trim()
+    .replace(/\s+/g, '')
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .toLowerCase();
+}
+
+function parseGenres(raw, validGenres) {
+  if (!raw || !raw.trim()) return [];
+  const parsed = raw.split(',')
+    .map(g => g.trim().replace(/^\d+\.\s*/, '').trim())
+    .filter(Boolean);
+  const valid = [], invalid = [];
+  for (const g of parsed) {
+    if (validGenres.includes(g)) valid.push(g);
+    else invalid.push(g);
   }
-  return { title: raw, n: null };
+  return { valid, invalid };
 }
 
-// ── タイトルでmovies.jsonを検索 (前方一致・完全一致の順) ────────────────────
+function parseThemeSong(raw) {
+  if (!raw || !raw.trim()) return [];
+  // 複数曲はセミコロン区切りに対応
+  return raw.split(';').map(item => {
+    const parts = item.split('/');
+    if (parts.length >= 2) {
+      return { name: parts[0].trim(), song: parts.slice(1).join('/').trim(), role: '主題歌' };
+    }
+    return { name: item.trim(), song: null, role: '主題歌' };
+  }).filter(a => a.name);
+}
 
-function findByTitle(arr, title) {
-  const exact = arr.find(x => x.t === title);
-  if (exact) return exact;
+function parseComposers(raw) {
+  if (!raw || !raw.trim()) return [];
+  return raw.split(/[,、]/).map(s => s.trim()).filter(Boolean);
+}
 
-  // 部分一致（タイトルを含む）
-  const partial = arr.filter(x => x.t && x.t.includes(title));
-  if (partial.length === 1) return partial[0];
-  if (partial.length > 1) return { __multi__: partial };
+function slugify(name) {
+  const s = name.trim().toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+  // 日本語等でスラッグが空になる場合は要手動設定のプレースホルダー
+  return s || 'REQUIRES-MANUAL-SLUG';
+}
 
+// ── マスター操作 ──────────────────────────────────────────────────────────────
+
+function loadMasters() {
+  const read = (file, key) => {
+    const p = path.join(MASTERS_DIR, file);
+    return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8'))[key] || [] : [];
+  };
+  return {
+    composers: read('composers.json', 'entries'),
+    artists:   read('artists.json',   'entries'),
+    genres:    read('genres.json',    'genres'),
+  };
+}
+
+function findInMaster(name, entries) {
+  const n = s => (s || '').trim().toLowerCase().replace(/[\s　]+/g, '');
+  return entries.find(e =>
+    n(e.name) === n(name) ||
+    n(e.name_en) === n(name) ||
+    (e.aliases || []).some(a => n(a) === n(name))
+  );
+}
+
+// ── インポートログ ────────────────────────────────────────────────────────────
+
+function loadImportLog() {
+  if (!fs.existsSync(IMPORT_LOG)) return { processed: [] };
+  try { return JSON.parse(fs.readFileSync(IMPORT_LOG, 'utf8')); }
+  catch { return { processed: [] }; }
+}
+
+function saveImportLog(log) {
+  fs.mkdirSync(path.dirname(IMPORT_LOG), { recursive: true });
+  fs.writeFileSync(IMPORT_LOG, JSON.stringify(log, null, 2), 'utf8');
+}
+
+// ── 重複チェック ──────────────────────────────────────────────────────────────
+
+function checkDuplicate(title, year, movies) {
+  const nt = normalizeTitle(title);
+  const exact = movies.filter(e => normalizeTitle(e.t) === nt);
+  if (exact.length) return { type: 'exact', entries: exact };
+  // 部分一致
+  const partial = movies.filter(e => e.t && (
+    normalizeTitle(e.t).includes(nt) || nt.includes(normalizeTitle(e.t))
+  ));
+  if (partial.length) return { type: 'partial', entries: partial };
   return null;
 }
 
-// ── 確認プロンプト ───────────────────────────────────────────────────────────
+// ── 対話プロンプト ────────────────────────────────────────────────────────────
 
-function confirm(question) {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  return new Promise(resolve => {
-    rl.question(question, answer => {
-      rl.close();
-      resolve(answer.trim().toLowerCase());
-    });
-  });
+function prompt(question) {
+  const i = rl.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise(r => i.question(question, a => { i.close(); r(a.trim()); }));
 }
 
-// ── メイン ──────────────────────────────────────────────────────────────────
+// ── メイン ────────────────────────────────────────────────────────────────────
 
 async function main() {
-  // --- ファイル確認 ---
+  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('  Google Forms インポーター' + (PREVIEW ? ' [プレビューモード]' : ''));
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
   if (!fs.existsSync(CSV_FILE)) {
-    console.error(`\nエラー: CSVファイルが見つかりません → ${CSV_FILE}`);
-    console.error('Google スプレッドシートからダウンロードしたCSVをプロジェクトルートに');
-    console.error('form_responses.csv という名前で置いてください。\n');
-    process.exit(1);
+    console.error('エラー: CSVが見つかりません →', CSV_FILE); process.exit(1);
   }
-
   if (!fs.existsSync(MOVIES_FILE)) {
-    console.error(`\nエラー: movies.json が見つかりません → ${MOVIES_FILE}\n`);
-    process.exit(1);
+    console.error('エラー: movies.json が見つかりません'); process.exit(1);
   }
 
-  // --- データ読み込み ---
+  const movies  = JSON.parse(fs.readFileSync(MOVIES_FILE, 'utf8'));
+  const masters = loadMasters();
+  const log     = loadImportLog();
+  const maxN    = Math.max(...movies.map(e => e.n));
+
+  console.log(`movies.json: ${movies.length}件 / 最大n: ${maxN}`);
+  console.log(`CSV: ${CSV_FILE}\n`);
+
+  // CSV パース
   const csvText = fs.readFileSync(CSV_FILE, 'utf8');
-  const rows = parseCsv(csvText);
+  const rows    = parseCsv(csvText);
+  if (!rows.length) { console.error('CSVが空です'); process.exit(1); }
 
-  if (rows.length === 0) {
-    console.error('\nエラー: CSVが空です。\n');
-    process.exit(1);
-  }
-
-  const arr = JSON.parse(fs.readFileSync(MOVIES_FILE, 'utf8'));
-
-  // --- ヘッダー行のスキップ判定 ---
-  // 1行目の列2がタイムスタンプ的な文字列でなければデータ行
-  const firstRow = rows[0];
-  const headerKeywords = ['タイムスタンプ', 'Timestamp', '作品名', 'タイトル', 'レビュー'];
-  const isHeader = headerKeywords.some(kw =>
-    (firstRow[0] || '').includes(kw) || (firstRow[1] || '').includes(kw)
+  // ヘッダー行スキップ判定
+  const headerKw = ['タイムスタンプ', 'Timestamp', '映画タイトル', '作品名'];
+  const isHeader = headerKw.some(kw =>
+    (rows[0][0] || '').includes(kw) || (rows[0][1] || '').includes(kw)
   );
   const dataRows = isHeader ? rows.slice(1) : rows;
+  const format   = detectFormat(dataRows);
 
-  console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-  console.log(`  Google Forms インポーター`);
-  console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-  console.log(`CSV: ${CSV_FILE}`);
-  console.log(`データ行数: ${dataRows.length}`);
-  console.log(`movies.json エントリ数: ${arr.length}\n`);
+  console.log(`フォーマット検出: ${format === 'new' ? '新形式(9列)' : '旧形式(3列)'}`);
+  console.log(`データ行数: ${dataRows.length}\n`);
 
-  // --- 各行を処理してプレビュー構築 ---
-  const updates = [];   // 正常に解決できた更新
-  const warnings = [];  // スキップ・要確認
+  // 結果バケット
+  const toAdd    = [];   // 新規追加
+  const toUpdate = [];   // 既存更新候補（重複疑い）
+  const skipped  = [];   // スキップ
+  const newComposers = [], newArtists = [];
 
   for (let i = 0; i < dataRows.length; i++) {
-    const row = dataRows[i];
-    const rowNum = (isHeader ? i + 2 : i + 1); // CSV上の行番号
+    const row    = dataRows[i];
+    const rowNum = (isHeader ? i + 2 : i + 1);
 
-    if (row.length < 3) {
-      warnings.push(`行${rowNum}: 列が足りません (${row.length}列) → スキップ`);
+    // インポート済みチェック
+    const timestamp = (row[0] || '').trim();
+    if (log.processed.includes(timestamp)) {
+      skipped.push({ rowNum, reason: 'インポート済み', timestamp });
       continue;
     }
 
-    const rawTitle = row[1] || '';
-    const reviewBody = row[2] || '';
+    let title, year, review, director, composerRaw, themeSongRaw, genreRaw, note;
 
-    if (!rawTitle.trim()) {
-      warnings.push(`行${rowNum}: 作品名が空 → スキップ`);
-      continue;
-    }
-    if (!reviewBody.trim()) {
-      warnings.push(`行${rowNum}: レビュー本文が空 → スキップ`);
-      continue;
-    }
-
-    const { title, n } = parseMovieField(rawTitle);
-    let entry = null;
-
-    if (n !== null) {
-      // n指定あり → IDで直接検索
-      entry = arr.find(x => x.n === n);
-      if (!entry) {
-        warnings.push(`行${rowNum} [${rawTitle}]: n=${n} が movies.json に存在しない → スキップ`);
-        continue;
-      }
+    if (format === 'new') {
+      title        = (row[1] || '').trim();
+      year         = (row[2] || '').trim().replace(/[^0-9]/g, '');
+      review       = (row[3] || '').trim();
+      director     = (row[4] || '').trim();
+      composerRaw  = (row[5] || '').trim();
+      themeSongRaw = (row[6] || '').trim();
+      genreRaw     = (row[7] || '').trim();
+      note         = (row[8] || '').trim();
     } else {
-      // nなし → タイトルで検索
-      const found = findByTitle(arr, title);
-      if (!found) {
-        warnings.push(`行${rowNum} [${rawTitle}]: タイトル「${title}」が見つからない → スキップ`);
-        continue;
-      }
-      if (found.__multi__) {
-        warnings.push(
-          `行${rowNum} [${rawTitle}]: タイトル「${title}」が${found.__multi__.length}件ヒット ` +
-          `(n=${found.__multi__.map(x => x.n).join(', ')}) → スキップ (n=XXX形式で指定してください)`
-        );
-        continue;
-      }
-      entry = found;
+      // 旧形式: col1 に「タイトル(n=XXX)」形式
+      const m = (row[1] || '').match(/^(.+?)\s*[（(]n=(\d+)[）)]\s*$/);
+      title  = m ? m[1].trim() : (row[1] || '').trim();
+      year   = '';
+      review = (row[2] || '').trim();
+      director = composerRaw = themeSongRaw = genreRaw = note = '';
     }
 
-    const oldD = entry.d || '';
-    const newD = reviewBody.trim();
+    if (!title) { skipped.push({ rowNum, reason: 'タイトル空' }); continue; }
+    if (!review) { skipped.push({ rowNum, reason: 'レビュー本文空' }); continue; }
+    if (year && !/^\d{4}$/.test(year)) {
+      skipped.push({ rowNum, reason: `公開年不正(${year})` }); continue;
+    }
 
-    if (oldD === newD) {
-      warnings.push(`行${rowNum} [n=${entry.n} ${entry.t}]: レビュー本文が同じ → スキップ`);
+    // ジャンル処理
+    const genreResult = parseGenres(genreRaw, masters.genres);
+    const genres      = genreResult.valid;
+
+    // 主題歌パース
+    const artists = parseThemeSong(themeSongRaw);
+
+    // 作曲家パース
+    const composers = parseComposers(composerRaw);
+
+    // マスター照合: 作曲家
+    for (const cName of composers) {
+      if (!cName) continue;
+      const found = findInMaster(cName, masters.composers);
+      if (!found && !newComposers.find(c => c.name === cName)) {
+        const slug = slugify(cName);
+        newComposers.push({ name: cName, name_en: cName, slug, aliases: [] });
+      }
+    }
+
+    // マスター照合: アーティスト
+    for (const a of artists) {
+      if (!a.name) continue;
+      const found = findInMaster(a.name, masters.artists);
+      if (!found && !newArtists.find(x => x.name === a.name)) {
+        const slug = slugify(a.name);
+        newArtists.push({ name: a.name, name_en: a.name, slug, aliases: [] });
+      }
+    }
+
+    // 重複チェック
+    const dup = checkDuplicate(title, year, movies);
+    if (dup) {
+      toUpdate.push({
+        rowNum, timestamp, title, year, review, director,
+        composers, artists, genres,
+        genreInvalid: genreResult.invalid,
+        note, dup,
+      });
       continue;
     }
 
-    updates.push({
-      rowNum,
-      rawTitle,
-      n: entry.n,
-      title: entry.t,
-      oldD,
-      newD,
-      entry,
+    // 新規追加対象
+    toAdd.push({
+      rowNum, timestamp, title, year, review, director,
+      composers, artists, genres,
+      genreInvalid: genreResult.invalid,
+      note,
     });
   }
 
-  // --- 警告表示 ---
-  if (warnings.length > 0) {
-    console.log('【スキップ・要確認】');
-    warnings.forEach(w => console.log('  ⚠ ' + w));
-    console.log('');
+  // ── プレビュー出力 ─────────────────────────────────────────────────────────
+
+  // マスター追加案
+  if (newComposers.length || newArtists.length) {
+    console.log('【マスター新規追加案】');
+    if (newComposers.length) {
+      console.log('  composers.json:');
+      newComposers.forEach(c =>
+        console.log(`    ・${c.name}  slug案: ${c.slug}`)
+      );
+    }
+    if (newArtists.length) {
+      console.log('  artists.json:');
+      newArtists.forEach(a =>
+        console.log(`    ・${a.name}  slug案: ${a.slug}`)
+      );
+    }
+    console.log();
   }
 
-  if (updates.length === 0) {
-    console.log('更新対象が0件です。処理を終了します。\n');
+  // 重複疑いリスト
+  if (toUpdate.length) {
+    console.log(`【重複疑い】 ${toUpdate.length}件 → ユーザー判断が必要`);
+    console.log('─────────────────────────────────────────────────');
+    toUpdate.forEach((u, idx) => {
+      const existingEntry = u.dup.entries[0];
+      const existingD = (existingEntry.d || '');
+      console.log(`\n[重複${idx+1}] CSV行${u.rowNum}: 「${u.title}」(${u.year})`);
+      console.log(`  一致種別: ${u.dup.type === 'exact' ? '完全一致' : '部分一致'}`);
+      console.log(`  既存エントリー: n=${existingEntry.n} / slug=${existingEntry.slug || 'なし'}`);
+      console.log(`  既存dフィールド: ${existingD ? existingD.length + '字あり（' + existingD.substring(0,40) + '…）' : '空'}`);
+      console.log(`  CSVレビュー冒頭: 「${u.review.substring(0, 60)}…」`);
+      console.log(`  選択肢: [s]スキップ / [u]既存のdを更新 / [a]別エントリーとして追加`);
+    });
+    console.log();
+  }
+
+  // 新規追加プレビュー
+  if (toAdd.length) {
+    console.log(`【新規追加】 ${toAdd.length}件`);
+    console.log('─────────────────────────────────────────────────');
+    toAdd.forEach((item, idx) => {
+      console.log(`\n[新規${idx+1}] CSV行${item.rowNum}`);
+      console.log(`  タイトル: ${item.title} (${item.year})`);
+      console.log(`  監督: ${item.director || '未入力'}`);
+      console.log(`  作曲家: ${item.composers.join(', ') || '未入力'}`);
+      console.log(`  主題歌: ${item.artists.map(a => a.name + (a.song ? ' / ' + a.song : '')).join('; ') || '未入力'}`);
+      console.log(`  ジャンル: ${item.genres.join(', ') || '未入力'}${item.genreInvalid.length ? ' ⚠不明:' + item.genreInvalid.join(',') : ''}`);
+      console.log(`  レビュー冒頭: 「${item.review.substring(0, 50)}…」(${item.review.length}字)`);
+    });
+    console.log();
+  }
+
+  // スキップ
+  if (skipped.length) {
+    console.log(`【スキップ】 ${skipped.length}件`);
+    skipped.forEach(s => console.log(`  行${s.rowNum}: ${s.reason}`));
+    console.log();
+  }
+
+  // サマリー
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log(`  新規追加: ${toAdd.length}件 / 重複疑い: ${toUpdate.length}件 / スキップ: ${skipped.length}件`);
+  console.log(`  マスター新規: 作曲家${newComposers.length}件・アーティスト${newArtists.length}件`);
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+  if (PREVIEW) {
+    console.log('\n[プレビューモード] movies.json・マスターへの書き込みは行いません。');
+    console.log('書き込むには --preview を外して実行し、確認プロンプトに y を入力してください。\n');
     return;
   }
 
-  // --- 更新プレビュー表示 ---
-  console.log(`【更新プレビュー】 ${updates.length}件`);
-  console.log('─────────────────────────────────────────');
+  // ── 書き込み（非プレビュー時）────────────────────────────────────────────
 
-  updates.forEach((u, idx) => {
-    console.log(`\n[${idx + 1}/${updates.length}] CSV行${u.rowNum} → n=${u.n} 「${u.title}」`);
-
-    const oldPreview = u.oldD
-      ? (u.oldD.length > 80 ? u.oldD.slice(0, 80) + '…' : u.oldD)
-      : '（空）';
-    const newPreview = u.newD.length > 80 ? u.newD.slice(0, 80) + '…' : u.newD;
-
-    console.log(`  現在: ${oldPreview}`);
-    console.log(`  更新: ${newPreview}`);
-  });
-
-  console.log('\n─────────────────────────────────────────');
-  console.log(`合計 ${updates.length}件を movies.json に書き込みます。`);
-
-  // --- 確認プロンプト ---
-  const answer = await confirm('\n実行しますか？ [y/N]: ');
-
-  if (answer !== 'y' && answer !== 'yes') {
-    console.log('\nキャンセルしました。movies.json は変更されていません。\n');
-    return;
+  if (!toAdd.length && !toUpdate.length) {
+    console.log('\n更新対象が0件です。\n'); return;
   }
 
-  // --- 書き込み実行 ---
-  for (const u of updates) {
-    u.entry.d = u.newD;
+  // 重複疑いを対話処理
+  const updateEntries = [];
+  for (const u of toUpdate) {
+    const ans = await prompt(`\n「${u.title}」の重複 [s]スキップ / [u]既存を更新 / [a]別途追加: `);
+    if (ans === 'u') updateEntries.push(u);
+    else if (ans === 'a') toAdd.push(u);
+    // s またはその他 → スキップ
   }
 
-  fs.writeFileSync(MOVIES_FILE, JSON.stringify(arr, null, 2), 'utf8');
+  const ans = await prompt(`\n${toAdd.length}件追加・${updateEntries.length}件更新します。実行しますか？ [y/N]: `);
+  if (ans.toLowerCase() !== 'y') {
+    console.log('キャンセルしました。\n'); return;
+  }
 
-  console.log(`\n✓ movies.json を更新しました。(${updates.length}件)\n`);
-  updates.forEach(u => {
-    console.log(`  ✓ n=${u.n} 「${u.title}」`);
-  });
+  let nextN = maxN + 1;
 
-  // --- HTML ページ再生成 ---
-  const { generateHtml } = require('./generate_slug_pages');
-  const MOVIES_DIR = path.join(__dirname, '..', 'movies');
-  let htmlUpdated = 0;
+  // 新規追加
+  for (const item of toAdd) {
+    const entry = {
+      n:    nextN++,
+      t:    item.title,
+      d:    item.review,
+      s:    false,
+      y:    `https://www.youtube.com/results?search_query=${encodeURIComponent(item.title + ' 予告')}`,
+      yt:   's',
+    };
+    if (item.year)               entry.year_pub    = parseInt(item.year, 10);
+    if (item.director)           entry.director    = item.director;
+    if (item.composers.length)   entry.music = { composer: item.composers, artists: item.artists };
+    else if (item.artists.length) entry.music = { composer: [], artists: item.artists };
+    if (item.genres.length)      entry.genre       = item.genres;
+    movies.push(entry);
+    log.processed.push(item.timestamp);
+    console.log(`✓ 追加: n=${entry.n} 「${entry.t}」`);
+  }
 
-  console.log('\n【HTML再生成】');
-  for (const u of updates) {
-    const slug = u.entry.slug;
-    if (!slug) {
-      console.log(`  ⚠ n=${u.n} 「${u.title}」: slug未設定 → スキップ`);
-      continue;
+  // 既存更新
+  for (const u of updateEntries) {
+    const target = movies.find(e => e.n === u.dup.entries[0].n);
+    if (!target) continue;
+    target.d = u.review;
+    if (u.director)           target.director = u.director;
+    if (u.composers.length || u.artists.length)
+      target.music = { composer: u.composers, artists: u.artists };
+    if (u.genres.length)      target.genre    = u.genres;
+    log.processed.push(u.timestamp);
+    console.log(`✓ 更新: n=${target.n} 「${target.t}」`);
+  }
+
+  // マスター更新
+  if (newComposers.length) {
+    const cp = path.join(MASTERS_DIR, 'composers.json');
+    const data = JSON.parse(fs.readFileSync(cp, 'utf8'));
+    data.entries.push(...newComposers);
+    fs.writeFileSync(cp, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`✓ composers.json に${newComposers.length}件追加`);
+  }
+  if (newArtists.length) {
+    const ap = path.join(MASTERS_DIR, 'artists.json');
+    const data = JSON.parse(fs.readFileSync(ap, 'utf8'));
+    data.entries.push(...newArtists);
+    fs.writeFileSync(ap, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`✓ artists.json に${newArtists.length}件追加`);
+  }
+
+  // movies.json 書き込み
+  fs.writeFileSync(MOVIES_FILE, JSON.stringify(movies, null, 2), 'utf8');
+  saveImportLog(log);
+  console.log(`\n✓ movies.json 更新完了 / import-log.json 更新完了`);
+
+  // HTML再生成（slug付きエントリーのみ）
+  try {
+    const { generateHtml } = require('./generate_slug_pages');
+    const MOVIES_DIR = path.join(ROOT, 'movies');
+    let htmlCount = 0;
+    for (const u of updateEntries) {
+      const slug = u.dup.entries[0].slug;
+      if (!slug) continue;
+      const file = path.join(MOVIES_DIR, slug, 'index.html');
+      if (!fs.existsSync(path.dirname(file))) continue;
+      const entry = movies.find(e => e.n === u.dup.entries[0].n);
+      fs.writeFileSync(file, generateHtml(entry), 'utf8');
+      console.log(`✓ HTML再生成: movies/${slug}/index.html`);
+      htmlCount++;
     }
-    const dir  = path.join(MOVIES_DIR, slug);
-    const file = path.join(dir, 'index.html');
-    if (!fs.existsSync(dir)) {
-      console.log(`  ⚠ n=${u.n} 「${u.title}」: movies/${slug}/ が存在しない → スキップ`);
-      continue;
-    }
-    fs.writeFileSync(file, generateHtml(u.entry), 'utf8');
-    console.log(`  ✓ movies/${slug}/index.html を再生成`);
-    htmlUpdated++;
+    if (htmlCount) console.log(`✓ ${htmlCount}件のHTMLを再生成`);
+  } catch (e) {
+    console.log('⚠ HTML再生成スキップ（generate_slug_pages.js 読み込みエラー）');
   }
-  console.log(`\n✓ ${htmlUpdated}件のHTMLページを再生成しました。`);
 
-  // --- pending_for_form.txt を再生成 ---
-  writePendingFile(arr);
-}
-
-// レビュー未入力の映画を pending_for_form.txt に書き出す
-function writePendingFile(arr) {
-  // d フィールドが空または空白のみのものを「未入力」とみなす
-  const pending = arr
-    .filter(x => x.t && !(x.d || '').trim())
-    .sort((a, b) => a.n - b.n)
-    .map(x => `${x.t}(n=${x.n})`);
-
-  fs.writeFileSync(PENDING_FILE, pending.join('\n'), 'utf8');
-
-  console.log(`\n✓ pending_for_form.txt を更新しました。(未入力 ${pending.length}件)`);
-  console.log('  → git commit & push 後、スプレッドシートの');
-  console.log('    「フォーム管理 → GitHub から同期」でドロップダウンを更新できます。\n');
+  console.log('\n完了。git commit & push をお忘れなく。\n');
 }
 
 main().catch(err => {
-  console.error('\n予期しないエラー:', err.message);
+  console.error('予期しないエラー:', err.message, err.stack);
   process.exit(1);
 });
