@@ -1,3 +1,34 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "name": "秦基博",
+      "name_en": "Hata Motohiro",
+      "slug": "hata-motohiro",
+      "aliases": []
+    },
+    {
+      "name": "アンジェラ・アキ",
+      "name_en": "Angela Aki",
+      "slug": "angela-aki",
+      "aliases": []
+    },
+    {
+      "name": "松任谷由実",
+      "name_en": "Matsutoya Yumi",
+      "slug": "matsutoya-yumi",
+      "aliases": []
+    },
+    {
+      "name": "PhilHarmoUniQue",
+      "name_en": "PhilHarmoUniQue",
+      "slug": "philharmonique",
+      "aliases": []
+    },
+    {
+      "name": "嵐",
+      "name_en": "Arashi",
+      "slug": "arashi",
+      "aliases": []
+    }
+  ]
 }

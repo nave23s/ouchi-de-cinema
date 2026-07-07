@@ -1,3 +1,70 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "name": "KASHIWA Daisuke",
+      "name_en": "KASHIWA Daisuke",
+      "slug": "kashiwa-daisuke",
+      "aliases": []
+    },
+    {
+      "name": "ブラッド・フィーデル",
+      "name_en": "Brad Fiedel",
+      "slug": "brad-fiedel",
+      "aliases": []
+    },
+    {
+      "name": "鷺巣詩郎",
+      "name_en": "Shiro Sagisu",
+      "slug": "shiro-sagisu",
+      "aliases": []
+    },
+    {
+      "name": "伊福部昭",
+      "name_en": "Akira Ifukube",
+      "slug": "akira-ifukube",
+      "aliases": []
+    },
+    {
+      "name": "松谷卓",
+      "name_en": "Matsutani Taku",
+      "slug": "matsutani-taku",
+      "aliases": []
+    },
+    {
+      "name": "ダヴィッド・ラフレッシュ",
+      "name_en": "David Lafleche",
+      "slug": "david-lafleche",
+      "aliases": []
+    },
+    {
+      "name": "ガブリエル・ロベルト",
+      "name_en": "Gabriel Roberto",
+      "slug": "gabriel-roberto",
+      "aliases": []
+    },
+    {
+      "name": "稲本響",
+      "name_en": "Inamoto Hibiki",
+      "slug": "inamoto-hibiki",
+      "aliases": []
+    },
+    {
+      "name": "ブライアン・タイラー",
+      "name_en": "Brian Tyler",
+      "slug": "brian-tyler",
+      "aliases": []
+    },
+    {
+      "name": "澤野弘之",
+      "name_en": "Hiroyuki Sawano",
+      "slug": "hiroyuki-sawano",
+      "aliases": []
+    },
+    {
+      "name": "荒川仁",
+      "name_en": "Arakawa Jin",
+      "slug": "arakawa-jin",
+      "aliases": []
+    }
+  ]
 }

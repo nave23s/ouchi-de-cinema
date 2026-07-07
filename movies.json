@@ -25,7 +25,18 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8D%E3%83%BC%E3%82%BF%E3%83%BC2%203D%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Terminator 2: Judgment Day",
-    "slug": "terminator-2-judgment-day-1991"
+    "slug": "terminator-2-judgment-day-1991",
+    "director": "ジェームズ・キャメロン",
+    "genre": [
+      "アクション",
+      "SF"
+    ],
+    "music": {
+      "composer": [
+        "ブラッド・フィーデル"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 9,
@@ -781,7 +792,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%B7%E3%83%B3%E3%83%BB%E3%82%B4%E3%82%B8%E3%83%A9%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Shin Godzilla",
-    "slug": "shin-godzilla-2016"
+    "slug": "shin-godzilla-2016",
+    "director": "庵野秀明（総監督）、樋口真嗣",
+    "genre": [
+      "SF",
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "鷺巣詩郎",
+        "伊福部昭"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 157,
@@ -1705,7 +1728,24 @@
     "y": "https://www.youtube.com/results?search_query=%E3%81%8F%E3%81%A1%E3%81%B3%E3%82%8B%E3%81%AB%E6%AD%8C%E3%82%92%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Kuchibiru ni uta o",
-    "slug": "kuchibiru-ni-uta-o-2015"
+    "slug": "kuchibiru-ni-uta-o-2015",
+    "director": "三木孝浩",
+    "genre": [
+      "ドラマ",
+      "音楽映画"
+    ],
+    "music": {
+      "composer": [
+        "松谷卓"
+      ],
+      "artists": [
+        {
+          "name": "アンジェラ・アキ",
+          "song": "手紙 ～拝啓 十五の君へ～",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 260,
@@ -2923,7 +2963,18 @@
     "y": "https://www.youtube.com/results?search_query=%E4%BA%BA%E7%94%9F%E3%80%81%E3%83%96%E3%83%A9%E3%83%9C%E3%83%BC%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Starbuck",
-    "slug": "starbuck-2011"
+    "slug": "starbuck-2011",
+    "director": "ケン・スコット",
+    "genre": [
+      "コメディ",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "ダヴィッド・ラフレッシュ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 422,
@@ -4287,7 +4338,24 @@
     "y": "https://www.youtube.com/results?search_query=%E8%A8%80%E3%81%AE%E8%91%89%E3%81%AE%E5%BA%AD%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "The Garden of Words",
-    "slug": "the-garden-of-words-2013"
+    "slug": "the-garden-of-words-2013",
+    "director": "新海誠",
+    "genre": [
+      "ロマンス",
+      "アニメ"
+    ],
+    "music": {
+      "composer": [
+        "KASHIWA Daisuke"
+      ],
+      "artists": [
+        {
+          "name": "秦基博",
+          "song": "Rain",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 616,
@@ -4647,7 +4715,24 @@
     "y": "https://www.youtube.com/results?search_query=%E7%9C%9F%E7%94%B0%E5%8D%81%E5%8B%87%E5%A3%AB%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Sanada 10 Braves",
-    "slug": "sanada-10-braves-2016"
+    "slug": "sanada-10-braves-2016",
+    "director": "堤幸彦",
+    "genre": [
+      "時代劇・歴史",
+      "アドベンチャー"
+    ],
+    "music": {
+      "composer": [
+        "ガブリエル・ロベルト"
+      ],
+      "artists": [
+        {
+          "name": "松任谷由実",
+          "song": "残火",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 657,
@@ -8505,7 +8590,23 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%A4%E3%82%AD%E3%82%AC%E3%83%9F%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Ikigami",
-    "slug": "ikigami-2008"
+    "slug": "ikigami-2008",
+    "director": "瀧本智行",
+    "genre": [
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "稲本響"
+      ],
+      "artists": [
+        {
+          "name": "PhilHarmoUniQue",
+          "song": "みちしるべ",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 1140,
@@ -11205,7 +11306,17 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%89%E3%82%B9%E3%83%94%E3%83%BC%E3%83%89%20MAX%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Fast & Furious",
-    "slug": "fast-and-furious-2009"
+    "slug": "fast-and-furious-2009",
+    "director": "ジャスティン・リン",
+    "genre": [
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "ブライアン・タイラー"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 1421,
@@ -12947,7 +13058,13 @@
     "y": "https://www.youtube.com/results?search_query=%E6%81%8B%E3%81%AE%E7%BD%AA%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Guilty of Romance",
-    "slug": "guilty-of-romance-2011"
+    "slug": "guilty-of-romance-2011",
+    "director": "園子温",
+    "genre": [
+      "ドラマ",
+      "犯罪"
+    ],
+    "backfill_note": "composer unverified"
   },
   {
     "n": 1641,
@@ -15949,7 +16066,24 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%97%E3%83%A9%E3%83%81%E3%83%8A%E3%83%87%E3%83%BC%E3%82%BF%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Puratina Deta",
-    "slug": "puratina-deta-2013"
+    "slug": "puratina-deta-2013",
+    "director": "大友啓史",
+    "genre": [
+      "SF",
+      "サスペンス"
+    ],
+    "music": {
+      "composer": [
+        "澤野弘之"
+      ],
+      "artists": [
+        {
+          "name": "嵐",
+          "song": "Breathless",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 2793,
@@ -18607,7 +18741,17 @@
     "y": "https://www.youtube.com/results?search_query=%E6%A3%AE%E3%81%AE%E4%B8%AD%E3%81%AE%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Restaurant in the Forest",
-    "slug": "restaurant-in-the-forest-2022"
+    "slug": "restaurant-in-the-forest-2022",
+    "director": "泉原航一",
+    "genre": [
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "荒川仁"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 2350,
