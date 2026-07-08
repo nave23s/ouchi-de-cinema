@@ -65,6 +65,78 @@
       "name_en": "Arakawa Jin",
       "slug": "arakawa-jin",
       "aliases": []
+    },
+    {
+      "name": "ジェフ・ザネリ",
+      "name_en": "Geoff Zanelli",
+      "slug": "geoff-zanelli",
+      "aliases": []
+    },
+    {
+      "name": "スティーヴン・プライス",
+      "name_en": "Steven Price",
+      "slug": "steven-price",
+      "aliases": []
+    },
+    {
+      "name": "ルパート・グレグソン=ウィリアムズ",
+      "name_en": "Rupert Gregson-Williams",
+      "slug": "rupert-gregson-williams",
+      "aliases": []
+    },
+    {
+      "name": "富貴晴美",
+      "name_en": "Harumi Fuuki",
+      "slug": "fuki-harumi",
+      "aliases": []
+    },
+    {
+      "name": "ヘンリー・ジャックマン",
+      "name_en": "Henry Jackman",
+      "slug": "henry-jackman",
+      "aliases": []
+    },
+    {
+      "name": "マシュー・マージソン",
+      "name_en": "Matthew Margeson",
+      "slug": "matthew-margeson",
+      "aliases": []
+    },
+    {
+      "name": "エスティ・ハイム",
+      "name_en": "Este Haim",
+      "slug": "este-haim",
+      "aliases": []
+    },
+    {
+      "name": "クリストファー・ストレイシー",
+      "name_en": "Christopher Stracey",
+      "slug": "christopher-stracey",
+      "aliases": []
+    },
+    {
+      "name": "きだしゅんすけ",
+      "name_en": "Kida Shunsuke",
+      "slug": "kida-shunsuke",
+      "aliases": []
+    },
+    {
+      "name": "榊いずみ",
+      "name_en": "Sakaki Izumi",
+      "slug": "sakaki-izumi",
+      "aliases": []
+    },
+    {
+      "name": "デイヴィッド・ニューマン",
+      "name_en": "David Newman",
+      "slug": "david-newman",
+      "aliases": []
+    },
+    {
+      "name": "安川午朗",
+      "name_en": "Goro Yasukawa",
+      "slug": "yasukawa-goro",
+      "aliases": []
     }
   ]
 }

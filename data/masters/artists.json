@@ -29,6 +29,30 @@
       "name_en": "Arashi",
       "slug": "arashi",
       "aliases": []
+    },
+    {
+      "name": "松たか子",
+      "name_en": "Matsu Takako",
+      "slug": "matsu-takako",
+      "aliases": []
+    },
+    {
+      "name": "矢野顕子",
+      "name_en": "Akiko Yano",
+      "slug": "yano-akiko",
+      "aliases": []
+    },
+    {
+      "name": "忌野清志郎",
+      "name_en": "Kiyoshiro Imawano",
+      "slug": "imawano-kiyoshiro",
+      "aliases": []
+    },
+    {
+      "name": "Sia",
+      "name_en": "Sia",
+      "slug": "sia",
+      "aliases": []
     }
   ]
 }

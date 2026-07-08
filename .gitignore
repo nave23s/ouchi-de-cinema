@@ -4,6 +4,9 @@ node_modules/
 *.log
 *.log.bak
 
+# バックアップ（大容量のため除外）
+backups/
+
 # 作業用一時ファイル
 form_responses.csv
 movies.json.backup-*
