@@ -11,3 +11,7 @@ backups/
 form_responses.csv
 movies.json.backup-*
 _preview_server.js
+
+# GA4認証情報（絶対にgit管理しない）
+credentials/
+*.token.json

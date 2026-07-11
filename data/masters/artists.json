@@ -53,6 +53,24 @@
       "name_en": "Sia",
       "slug": "sia",
       "aliases": []
+    },
+    {
+      "name": "井口理",
+      "name_en": "Satoru Iguchi",
+      "slug": "satoru-iguchi",
+      "aliases": []
+    },
+    {
+      "name": "ボビー・セッションズ",
+      "name_en": "Bobby Sessions",
+      "slug": "bobby-sessions",
+      "aliases": []
+    },
+    {
+      "name": "メーガン・ザ・スタリオン",
+      "name_en": "Megan Thee Stallion",
+      "slug": "megan-thee-stallion",
+      "aliases": []
     }
   ]
 }
