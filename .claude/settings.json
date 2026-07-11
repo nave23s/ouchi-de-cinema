@@ -5,11 +5,33 @@
     "allow": [
       "Bash(open *)",
       "Bash(pbcopy *)",
-      "Bash(code *)"
+      "Bash(code *)",
+      "Read",
+      "Bash(node *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "ask": [
+      "Bash(git push *)"
+    ],
+    "deny": [
+      "Read(**/.env*)",
+      "Read(**/credentials*.json)",
+      "Read(**/service-account*.json)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)"
     ]
   },
 
   "env": {
     "MY_LOCAL_API_URL": "http://localhost:3000"
+  },
+
+  "statusLine": {
+    "type": "command",
+    "command": "powershell -NoProfile -File .claude/statusline.ps1",
+    "refreshInterval": 10
   }
 }
