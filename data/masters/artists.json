@@ -71,6 +71,36 @@
       "name_en": "Megan Thee Stallion",
       "slug": "megan-thee-stallion",
       "aliases": []
+    },
+    {
+      "name": "川崎鷹也",
+      "name_en": "Takaya Kawasaki",
+      "slug": "kawasaki-takaya",
+      "aliases": []
+    },
+    {
+      "name": "yama",
+      "name_en": "yama",
+      "slug": "yama",
+      "aliases": []
+    },
+    {
+      "name": "HY",
+      "name_en": "HY",
+      "slug": "hy",
+      "aliases": []
+    },
+    {
+      "name": "竹内まりや",
+      "name_en": "Mariya Takeuchi",
+      "slug": "takeuchi-mariya",
+      "aliases": []
+    },
+    {
+      "name": "角野隼斗",
+      "name_en": "Hayato Kadono",
+      "slug": "kadono-hayato",
+      "aliases": []
     }
   ]
 }

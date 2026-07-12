@@ -4783,6 +4783,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://ouchi-de-cinema.com/genres/crime/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://ouchi-de-cinema.com/genres/drama/</loc>
     <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -4796,6 +4802,12 @@
   </url>
   <url>
     <loc>https://ouchi-de-cinema.com/genres/sf/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ouchi-de-cinema.com/genres/suspense/</loc>
     <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

@@ -149,6 +149,48 @@
       "name_en": "Jermaine Stegall",
       "slug": "jermaine-stegall",
       "aliases": []
+    },
+    {
+      "name": "小林洋平",
+      "name_en": "Yohei Kobayashi",
+      "slug": "kobayashi-yohei",
+      "aliases": []
+    },
+    {
+      "name": "コトリンゴ",
+      "name_en": "Cotoringo",
+      "slug": "cotoringo",
+      "aliases": []
+    },
+    {
+      "name": "林ゆうすけ",
+      "name_en": "Yusuke Hayashi",
+      "slug": "hayashi-yusuke",
+      "aliases": []
+    },
+    {
+      "name": "日向萌",
+      "name_en": "Moe Hinata",
+      "slug": "hinata-moe",
+      "aliases": []
+    },
+    {
+      "name": "宇崎竜童",
+      "name_en": "Ryu Uzaki",
+      "slug": "uzaki-ryu",
+      "aliases": []
+    },
+    {
+      "name": "加羽沢美濃",
+      "name_en": "Mino Kahawazawa",
+      "slug": "kahawazawa-mino",
+      "aliases": []
+    },
+    {
+      "name": "H・スコット・サリーナス",
+      "name_en": "H. Scott Salinas",
+      "slug": "h-scott-salinas",
+      "aliases": []
     }
   ]
 }
