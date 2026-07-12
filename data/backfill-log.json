@@ -1,0 +1,37 @@
+{
+  "pending": [
+    {
+      "n": 128,
+      "title": "東京女子図鑑",
+      "slug": "tokyo-girl",
+      "issue": "music.composer 未確認",
+      "note": "音楽情報・要再調査。Amazonプライムビデオ配信のドラマシリーズ（2016年）。タナダユキ監督。",
+      "logged_at": "2026-07-12"
+    },
+    {
+      "n": 1880,
+      "title": "エマ デッド・オア・キル",
+      "slug": "hunting-emma",
+      "issue": "music.composer 未確認",
+      "note": "音楽情報・要再調査。南アフリカ映画（2017年）。監督：バイロン・デイビス。",
+      "logged_at": "2026-07-12"
+    },
+    {
+      "n": 2577,
+      "title": "セクシー・ヘブン",
+      "slug": "whos-your-daddy-2003",
+      "issue": "music.composer 未確認",
+      "note": "音楽情報・要再調査。監督：アンディ・フィックマン（2002年）。",
+      "logged_at": "2026-07-12"
+    },
+    {
+      "n": 2652,
+      "title": "キッチン革命",
+      "slug": "kitchen-revolution-2023",
+      "issue": "music.composer・director 未確認",
+      "note": "音楽情報・要再調査。テレビ朝日系SPドラマ（2023年）。監督・音楽ともに未確認。",
+      "logged_at": "2026-07-12"
+    }
+  ],
+  "_howto_find_empty_composers": "node -e \"const m=JSON.parse(require('fs').readFileSync('movies.json','utf8')); const r=m.filter(e=>e.slug&&e.music&&Array.isArray(e.music.composer)&&e.music.composer.length===0); console.log(r.length+'件:', r.map(e=>e.n+' '+e.t));\""
+}
