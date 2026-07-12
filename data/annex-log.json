@@ -1,0 +1,102 @@
+{
+  "moved_at": "2026-07-12",
+  "reason": "TVアニメ・TVドラマシリーズをannex.jsonへ分離",
+  "entries": [
+    {
+      "n": 128,
+      "title": "東京女子図鑑",
+      "slug": "tokyo-girl",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 210,
+      "title": "バイプレイヤーズ",
+      "slug": "byplayers-4",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2737,
+      "title": "あぁラブホテル",
+      "slug": "lovehotel",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 257,
+      "title": "孤独のグルメ Season3 エピソード3",
+      "slug": null,
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 826,
+      "title": "ラッパーに噛まれたらラッパーになるドラマ",
+      "slug": null,
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 983,
+      "title": "pet",
+      "slug": "pet-2020",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 1218,
+      "title": "来世ではちゃんとします",
+      "slug": "raise-de-wa-chanto-shi-masu",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2795,
+      "title": "アイアン・シェフ ブラジル編 S1E1 隠し味は涙と思い出",
+      "slug": "iron-chef-brazil-s1e1",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2910,
+      "title": "アイアン・シェフ ブラジル編 S1E2 北へ南へ",
+      "slug": "iron-chef-brazil-s1e2",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2911,
+      "title": "アイアン・シェフ ブラジル編 S1E3 スイート・バトル",
+      "slug": "iron-chef-brazil-s1e3",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2912,
+      "title": "アイアン・シェフ ブラジル編 S1E4 物を言うのは経験",
+      "slug": "iron-chef-brazil-s1e4",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2138,
+      "title": "アイアン・シェフ ブラジル編 S1E5 カップル対決",
+      "slug": "iron-chef-brazil-s1e5",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2139,
+      "title": "アイアン・シェフ ブラジル編 S1E6 大地の恵み",
+      "slug": "iron-chef-brazil-s1e6",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2915,
+      "title": "アイアン・シェフ ブラジル編 S1E7 魚との格闘",
+      "slug": "iron-chef-brazil-s1e7",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2916,
+      "title": "アイアン・シェフ ブラジル編 S1E8 最終決戦",
+      "slug": "iron-chef-brazil-s1e8",
+      "moved_at": "2026-07-12"
+    },
+    {
+      "n": 2652,
+      "title": "キッチン革命",
+      "slug": "kitchen-revolution-2023",
+      "moved_at": "2026-07-12"
+    }
+  ]
+}
