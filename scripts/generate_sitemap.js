@@ -30,6 +30,19 @@ for (const m of withSlug) {
   urls.push({ loc, priority: '0.7', changefreq: 'monthly' });
 }
 
+// ジャンルハブページ（genres/*/index.html が存在するものを自動収集）
+const genresDir = path.join(ROOT, 'genres');
+if (fs.existsSync(genresDir)) {
+  for (const slug of fs.readdirSync(genresDir)) {
+    const htmlPath = path.join(genresDir, slug, 'index.html');
+    if (fs.existsSync(htmlPath)) {
+      urls.push({ loc: `${BASE}/genres/${slug}/`, priority: '0.6', changefreq: 'weekly' });
+    }
+  }
+}
+
+const hubCount = urls.length - withSlug.length - 2;
+
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `  <url>
@@ -41,4 +54,4 @@ ${urls.map(u => `  <url>
 </urlset>`;
 
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml, 'utf8');
-console.log(`sitemap.xml 生成完了: ${urls.length} URL（映画ページ ${withSlug.length} 本 + トップ等 2件）`);
+console.log(`sitemap.xml 生成完了: ${urls.length} URL（映画ページ ${withSlug.length} 本 + ジャンルハブ ${hubCount}件 + トップ等 2件）`);
