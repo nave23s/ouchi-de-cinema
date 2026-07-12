@@ -11360,7 +11360,9 @@
         }
       ]
     },
-    "year": 2021
+    "year": 2021,
+    "english_title": "Coming 2 America",
+    "slug": "coming-2-america-2021"
   },
   {
     "n": 1410,
@@ -21862,6 +21864,8 @@
         }
       ]
     },
-    "year": 2025
+    "year": 2025,
+    "english_title": "Kokuho",
+    "slug": "kokuho-2025"
   }
 ]
