@@ -92,8 +92,39 @@ function buildSeriesNav(currentMovie, seriesEpisodes) {
   return `\n  <!-- シリーズナビゲーション -->\n  <section class="section">\n    <div class="sec-label sec-label-gold">Series — ${esc(currentMovie.series)}</div>\n    <div class="series-ep-list">\n${items}\n    </div>\n  </section>`;
 }
 
+function buildMusicSection(music, soundtrackUrl) {
+  const hasComposer = music && Array.isArray(music.composer) && music.composer.length > 0;
+  const hasArtists  = music && Array.isArray(music.artists)  && music.artists.length > 0;
+  if (!hasComposer && !hasArtists) {
+    return `    <div class="music-pending">
+      <div class="music-pending-icon">♪</div>
+      <div class="music-pending-title">Music Review — Coming Soon</div>
+      <p class="music-pending-text">
+        音楽・サウンドの詳細レビューを準備中です。<br>
+        作曲家・印象的なシーン・サウンドトラック情報を近日公開予定。
+      </p>
+    </div>`;
+  }
+  let rows = '';
+  if (hasComposer) {
+    rows += `      <dt class="music-dt">劇伴</dt><dd class="music-dd">${esc(music.composer.join(' / '))}</dd>\n`;
+  }
+  if (hasArtists) {
+    for (const a of music.artists) {
+      const label = esc(a.role || 'テーマ曲');
+      const val   = a.song ? `${esc(a.song)}（${esc(a.name)}）` : esc(a.name);
+      rows += `      <dt class="music-dt">${label}</dt><dd class="music-dd">${val}</dd>\n`;
+    }
+  }
+  return `    <div class="music-card">
+      <dl class="music-dl">
+${rows}      </dl>
+      <a href="${esc(soundtrackUrl)}" target="_blank" rel="noopener nofollow sponsored" class="music-amz-link">🎵 サウンドトラックをAmazonで探す →</a>
+    </div>`;
+}
+
 function generateHtml(movie, seriesEpisodes = []) {
-  const { n, t, d, y, english_title, slug } = movie;
+  const { n, t, d, y, english_title, slug, genre, music } = movie;
   const jaTitle  = t;
   const enTitle  = english_title || '';
   const pageUrl  = `https://ouchi-de-cinema.com/movies/${slug}/`;
@@ -101,12 +132,16 @@ function generateHtml(movie, seriesEpisodes = []) {
   const desc     = metaDesc(jaTitle);
   const ogDescription = ogDesc(d, jaTitle);
 
-  const reviewHtml   = formatReview(d);
-  const trailerUrl   = y || `https://www.youtube.com/results?search_query=${encodeURIComponent(jaTitle + ' 予告')}`;
-  const primeUrl     = amazonPrimeUrl(jaTitle);
-  const blurayUrl    = amazonBlurayUrl(jaTitle);
+  const reviewHtml    = formatReview(d);
+  const trailerUrl    = y || `https://www.youtube.com/results?search_query=${encodeURIComponent(jaTitle + ' 予告')}`;
+  const primeUrl      = amazonPrimeUrl(jaTitle);
+  const blurayUrl     = amazonBlurayUrl(jaTitle);
   const soundtrackUrl = amazonSoundtrackUrl(jaTitle);
   const seriesNavHtml = seriesEpisodes.length >= 2 ? buildSeriesNav(movie, seriesEpisodes) : '';
+  const genreTags     = (genre && genre.length > 0)
+    ? genre.map(g => `<span class="tag">${esc(g)}</span>`).join('\n      ')
+    : '';
+  const musicHtml     = buildMusicSection(music, soundtrackUrl);
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -193,6 +228,11 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .music-pending-icon { font-size:36px; margin-bottom:12px; }
 .music-pending-title { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.15em; color:var(--dim); margin-bottom:8px; text-transform:uppercase; }
 .music-pending-text { font-size:13px; color:var(--dim); line-height:1.8; }
+.music-card { background:var(--s1); border:1px solid var(--bd); border-radius:14px; padding:22px 26px 18px; }
+.music-dl { display:grid; grid-template-columns:5em 1fr; gap:6px 12px; align-items:baseline; }
+.music-dt { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); letter-spacing:.08em; }
+.music-dd { font-size:14px; color:var(--sub); line-height:1.8; }
+.music-amz-link { display:inline-block; margin-top:14px; font-size:12px; color:var(--gold); text-decoration:underline; text-underline-offset:3px; }
 .trailer-btn { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,rgba(192,140,40,.1),rgba(192,140,40,.04)); border:1px solid rgba(192,140,40,.3); border-radius:13px; padding:18px 20px; color:var(--gold); transition:all .2s; }
 .trailer-btn:hover { background:rgba(192,140,40,.16); transform:translateY(-2px); }
 .trailer-play { width:40px; height:40px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; flex-shrink:0; }
@@ -264,6 +304,7 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
     <div class="hero-meta">
       <span class="tag">映画</span>
       <span class="tag">レビュー</span>
+      ${genreTags}
     </div>
   </div>
 </header>
@@ -278,17 +319,10 @@ ${reviewHtml}
     </div>
   </section>
 
-  <!-- 音楽・音セクション（準備中） -->
+  <!-- 音楽・音セクション -->
   <section class="section">
     <div class="sec-label sec-label-gold">Music &amp; Sound</div>
-    <div class="music-pending">
-      <div class="music-pending-icon">♪</div>
-      <div class="music-pending-title">Music Review — Coming Soon</div>
-      <p class="music-pending-text">
-        音楽・サウンドの詳細レビューを準備中です。<br>
-        作曲家・印象的なシーン・サウンドトラック情報を近日公開予定。
-      </p>
-    </div>
+${musicHtml}
   </section>
 
   <!-- 予告編 -->

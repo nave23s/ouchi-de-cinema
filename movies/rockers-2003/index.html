@@ -84,6 +84,11 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .music-pending-icon { font-size:36px; margin-bottom:12px; }
 .music-pending-title { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.15em; color:var(--dim); margin-bottom:8px; text-transform:uppercase; }
 .music-pending-text { font-size:13px; color:var(--dim); line-height:1.8; }
+.music-card { background:var(--s1); border:1px solid var(--bd); border-radius:14px; padding:22px 26px 18px; }
+.music-dl { display:grid; grid-template-columns:5em 1fr; gap:6px 12px; align-items:baseline; }
+.music-dt { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); letter-spacing:.08em; }
+.music-dd { font-size:14px; color:var(--sub); line-height:1.8; }
+.music-amz-link { display:inline-block; margin-top:14px; font-size:12px; color:var(--gold); text-decoration:underline; text-underline-offset:3px; }
 .trailer-btn { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,rgba(192,140,40,.1),rgba(192,140,40,.04)); border:1px solid rgba(192,140,40,.3); border-radius:13px; padding:18px 20px; color:var(--gold); transition:all .2s; }
 .trailer-btn:hover { background:rgba(192,140,40,.16); transform:translateY(-2px); }
 .trailer-play { width:40px; height:40px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; flex-shrink:0; }
@@ -155,6 +160,9 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
     <div class="hero-meta">
       <span class="tag">映画</span>
       <span class="tag">レビュー</span>
+      <span class="tag">コメディ</span>
+      <span class="tag">音楽</span>
+      <span class="tag">青春</span>
     </div>
   </div>
 </header>
@@ -168,23 +176,58 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
       <p>博多ロックコメディ映画。</p>
       <p>監督は、実在のバンドTheRockersのボーカル陣内孝則さん監督作品。</p>
       <p>なんと言ってもキャストが豪華！</p>
-      <p>中村俊介さん、玉木宏さん、佐藤隆太さん、塚本高史さん、玉山鉄二さん、麻生祐未さん、風間トオルさん、佐藤浩一さん、鈴木京香さん、中井貴一さん！重松豊さん、モト冬樹さん、八嶋智人さんはなわ、神木隆之介さん、大杉漣さん、萬田久子さん、白竜さん、まだまだ他にも</p>
+      <p>中村俊介さん、玉木宏さん、佐藤隆太さん、塚本高史さん、玉山鉄二さん、麻生祐未さん、風間トオルさん、佐藤浩一さん、鈴木京香さん、中井貴一さん！松重豊さん、モト冬樹さん、八嶋智人さん、はなわさん、神木隆之介さん、大杉漣さん、萬田久子さん、白竜さん、まだまだ他にも</p>
       <p>それぞれが主役級！</p>
       <p>小泉今日子さんがビザール着てSMの女王様</p>
       <p>ギター担いだ王様がチラッと出演</p>
+      <p>これだけの主役級が、贅沢に次々とカメオ出演するし</p>
+      <p>信じられないくらいのお祭り騒ぎで、お腹いっぱいになるし</p>
+      <p>どこを見ていいか分からなくなるよ、本当に。</p>
+      <p>小泉今日子さんのあの女王様姿、そりゃあ目が釘付けになるわな。</p>
+      <p>ビザールを纏った妖艶な佇まいと、あのドスの利いた低く鋭い声。</p>
+      <p>そしてギターを担いだ王様がチラッと映る、あの画面の絶妙なB級感。</p>
+      <p>中井貴一さんや佐藤浩一さんまで、こんなところで何やってるんですかっていう、愛ある贅沢な無駄遣い。</p>
+      <p>外は賑やかなコメディなのに、一歩引いて耳をすますと、全編に炸裂する本物の博多めんたいロックの「音」の熱量が、とにかく凄い。</p>
+      <p>アンプのスイッチをパチッと入れた瞬間の、ブーッというあの重いノイズ。</p>
+      <p>ギターの弦を烈しくかき鳴らす、ジャガジャーンという耳をツンと刺すような歪んだ爆音。</p>
+      <p>塚本高史さんの叩くドラムの、お腹の底にズシンと響く激しいビートの地鳴り。</p>
+      <p>佐藤隆太さんのアニキ肌なベースが刻む、ゴリゴリとした骨太な低音。</p>
+      <p>中村俊介さん演じるジンの、ぶっきらぼうだけど真っ直ぐに突き抜ける歌声。</p>
+      <p>そして玉木宏さん演じるタニの、哀愁を帯びた鋭いギターソロの旋律。</p>
+      <p>あの時代の博多の屋台の匂いと熱気が、彼らの不器用なステップと爆音を通して、じわりじわりとスクリーンの向こうから伝わってくる。</p>
+      <p>練習スタジオの狭い部屋で、最初はチューニングの狂った音がぐちゃぐちゃにぶつかり合う。</p>
+      <p>それが、喧嘩ばかりしているメンバーたちが、ふっと音を合わせた瞬間にピタッと呼吸が重なる。</p>
+      <p>映画のための綺麗な劇伴なんかじゃない。</p>
+      <p>剥き出しのパンクロックの衝撃音と、若者たちの荒い息遣い。</p>
+      <p>それ自体が、この愛おしい青春の最高の音楽。</p>
+      <p>中盤、物語が少し切ない方向へと舵を切る。</p>
+      <p>タニの抱える運命と、あんなに騒がしかった厨房の音が、ふっと消えるような完全な無音の演出。</p>
+      <p>静まり返った部屋に響く、ただ一つのため息。</p>
+      <p>窓の外を濡らす、シトシトという静かな雨の音。</p>
+      <p>音をあえて剥ぎ取ることで、それまで鳴り響いていた爆音の残響と、彼らの胸の痛みが、じわりじわりと耳の奥に染み渡っていく。</p>
+      <p>悲しいシーンの裏で、あえて激しい曲を流さない引き算の美学。</p>
+      <p>クライマックス、ライブハウスのステージ。</p>
+      <p>客席を埋め尽くす大歓声と、ステージを照らす熱いライト。</p>
+      <p>演奏されるテーマ曲「ROCKERS」。</p>
+      <p>あの疾走感溢れるイントロのギターリフが鳴り響いた瞬間、会場の熱量が爆発する。</p>
+      <p>足を血に染めるように激しくステップを刻んで、命がけで駆け抜けるメンバーたち。</p>
+      <p>夢を追うことの泥臭さ、人間の足音が紡ぐ奇跡。</p>
+      <p>最高のステージで、すべてを投げ出して演奏するし</p>
+      <p>狂ったように、あの板の上で踊り狂うし</p>
+      <p>映画のエンディング、鳴り止まないアンコールの声の向こう側。</p>
+      <p>彼らが鳴らしたあの激しい博多ロックのノイズは、今もあの街のどこかで、変わらずに熱く響き続けているんだろうか？</p>
     </div>
   </section>
 
-  <!-- 音楽・音セクション（準備中） -->
+  <!-- 音楽・音セクション -->
   <section class="section">
     <div class="sec-label sec-label-gold">Music &amp; Sound</div>
-    <div class="music-pending">
-      <div class="music-pending-icon">♪</div>
-      <div class="music-pending-title">Music Review — Coming Soon</div>
-      <p class="music-pending-text">
-        音楽・サウンドの詳細レビューを準備中です。<br>
-        作曲家・印象的なシーン・サウンドトラック情報を近日公開予定。
-      </p>
+    <div class="music-card">
+      <dl class="music-dl">
+      <dt class="music-dt">劇伴</dt><dd class="music-dd">佐々木康詞 / 安藤日出雄</dd>
+      <dt class="music-dt">テーマ曲</dt><dd class="music-dd">ROCKERS（THe ROCKERS）</dd>
+      </dl>
+      <a href="https://www.amazon.co.jp/s?k=%E3%83%AD%E3%83%83%E3%82%AB%E3%83%BC%E3%82%BA%E3%80%80rockers%20%E3%82%B5%E3%82%A6%E3%83%B3%E3%83%89%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF&amp;tag=ouchidecinama-22" target="_blank" rel="noopener nofollow sponsored" class="music-amz-link">🎵 サウンドトラックをAmazonで探す →</a>
     </div>
   </section>
 
