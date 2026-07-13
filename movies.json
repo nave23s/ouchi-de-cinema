@@ -61,7 +61,7 @@
     "director": "エドガー・ライト",
     "genre": [
       "アクション",
-      "犯罪"
+      "クライム"
     ],
     "music": {
       "composer": [
@@ -1845,7 +1845,7 @@
     "director": "三木孝浩",
     "genre": [
       "ドラマ",
-      "ミュージカル・音楽"
+      "音楽・ミュージカル"
     ],
     "music": {
       "composer": [
@@ -13167,7 +13167,7 @@
     "director": "園子温",
     "genre": [
       "ドラマ",
-      "犯罪"
+      "クライム"
     ],
     "backfill_note": "composer unverified"
   },
@@ -21228,7 +21228,7 @@
     "director": "吉田大八",
     "genre": [
       "ドラマ",
-      "犯罪"
+      "クライム"
     ],
     "music": {
       "composer": [
@@ -21454,7 +21454,7 @@
     "director": "陣内孝則",
     "genre": [
       "コメディ",
-      "ミュージカル・音楽",
+      "音楽・ミュージカル",
       "青春"
     ],
     "music": {
@@ -21741,7 +21741,7 @@
     "slug": "the-devils-path-2013",
     "director": "白石和彌",
     "genre": [
-      "犯罪",
+      "クライム",
       "サスペンス"
     ],
     "music": {
@@ -21793,7 +21793,7 @@
     "slug": "the-crows-thumb-2012",
     "director": "伊藤匡史",
     "genre": [
-      "犯罪",
+      "クライム",
       "コメディ"
     ],
     "music": {
