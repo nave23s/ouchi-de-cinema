@@ -192,7 +192,7 @@ function main() {
   const movies  = JSON.parse(fs.readFileSync(path.join(ROOT, 'movies.json'), 'utf8'));
   const isDry   = process.argv.includes('--dry-run');
   const MIN_WORKS = 3;
-  const TARGETS = ['ドラマ','アクション','ロマンス','コメディ','SF','アドベンチャー','クライム','サスペンス'];
+  const TARGETS = ['ドラマ','アクション','ロマンス','コメディ','SF','アドベンチャー','クライム','サスペンス','音楽・ミュージカル'];
 
   let generated = 0, skipped = 0;
   const report = [];
