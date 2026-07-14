@@ -419,7 +419,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%BB%E3%83%BC%E3%83%A9%E3%83%BC%E6%9C%8D%E3%81%A8%E6%A9%9F%E9%96%A2%E9%8A%83%20~~%E5%8D%92%E6%A5%AD~~%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "serafuku-to-kikan-ju-sotsugyo"
+    "slug": "serafuku-to-kikan-ju-sotsugyo",
+    "director": "前田弘二",
+    "genre": [
+      "クライム",
+      "アクション",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "きだしゅんすけ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 107,
@@ -429,7 +441,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%91%E3%83%83%E3%82%BB%E3%83%B3%E3%82%B8%E3%83%A3%E3%83%BC%E3%82%BA%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Passengers",
-    "slug": "passengers-2008"
+    "slug": "passengers-2008",
+    "director": "ロドリゴ・ガルシア",
+    "genre": [
+      "ミステリー",
+      "サスペンス",
+      "ロマンス"
+    ],
+    "music": {
+      "composer": [
+        "エドワード・シアマー"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 108,
@@ -547,7 +571,18 @@
     "y": "https://www.youtube.com/results?search_query=MONSTERZ%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Monsterz",
-    "slug": "monsterz-2014"
+    "slug": "monsterz-2014",
+    "director": "中田秀夫",
+    "genre": [
+      "サスペンス",
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "川井憲次"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 2748,
@@ -575,7 +610,18 @@
     "y": "https://www.youtube.com/results?search_query=%EF%BC%B2%EF%BC%A1%EF%BC%AE%EF%BC%AD%EF%BC%A1%EF%BC%B2%EF%BC%B5%20%E7%A5%9E%E3%81%AE%E8%88%8C%E3%82%92%E6%8C%81%E3%81%A4%E7%94%B7%E3%80%9C%E9%AC%BC%E7%81%AF%E3%83%87%E3%82%B9%E3%83%AD%E3%83%BC%E3%83%89%E7%B7%A8%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "kami-no-shita-o-motsu-otoko-hozuki-desurodo-hen"
+    "slug": "kami-no-shita-o-motsu-otoko-hozuki-desurodo-hen",
+    "director": "堤幸彦",
+    "genre": [
+      "ミステリー",
+      "コメディ"
+    ],
+    "music": {
+      "composer": [
+        "荻野清子"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 2731,
@@ -615,7 +661,18 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%98%E3%83%83%E3%83%89%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Dragon Head",
-    "slug": "dragon-head-2003"
+    "slug": "dragon-head-2003",
+    "director": "飯田譲治",
+    "genre": [
+      "サスペンス",
+      "SF"
+    ],
+    "music": {
+      "composer": [
+        "池頼広"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 127,
@@ -635,7 +692,19 @@
     "y": "https://www.youtube.com/results?search_query=%E4%B8%96%E7%95%8C%E3%81%AB%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%AE%E3%83%97%E3%83%AC%E3%82%A4%E3%83%96%E3%83%83%E3%82%AF%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "sekai-ni-hitotsu-no-pureibukku"
+    "slug": "sekai-ni-hitotsu-no-pureibukku",
+    "director": "デヴィッド・O・ラッセル",
+    "genre": [
+      "ロマンス",
+      "コメディ",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "ダニー・エルフマン"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 130,
@@ -787,7 +856,25 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%92%E3%83%BC%E3%83%AD%E3%83%BC%E3%83%9E%E3%83%8B%E3%82%A2%20-%20%E7%94%9F%E6%B4%BB-%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Hero Mania: Life",
-    "slug": "hero-mania-life-2016"
+    "slug": "hero-mania-life-2016",
+    "director": "豊島圭介",
+    "genre": [
+      "アクション",
+      "クライム",
+      "コメディ"
+    ],
+    "music": {
+      "composer": [
+        "グランドファンク"
+      ],
+      "artists": [
+        {
+          "name": "NICO Touches the Walls",
+          "song": "Strato",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 146,
@@ -817,7 +904,24 @@
     "y": "https://www.youtube.com/results?search_query=GANTZ%3AO%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Gantz: O",
-    "slug": "gantz-o-2016"
+    "slug": "gantz-o-2016",
+    "director": "さとうけいいち",
+    "genre": [
+      "アクション",
+      "SF"
+    ],
+    "music": {
+      "composer": [
+        "池頼広"
+      ],
+      "artists": [
+        {
+          "name": "ドレスコーズ",
+          "song": "人間ビデオ",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 149,
@@ -827,7 +931,19 @@
     "y": "https://www.youtube.com/results?search_query=%E6%AE%BF%E3%80%81%E5%88%A9%E6%81%AF%E3%81%A7%E3%81%94%E3%81%96%E3%82%8B%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "shingari-risoku-de-gozaru"
+    "slug": "shingari-risoku-de-gozaru",
+    "director": "中村義洋",
+    "genre": [
+      "時代劇・歴史",
+      "コメディ",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "安川午朗"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 150,
@@ -959,7 +1075,24 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%A2%E3%82%BA%E3%83%9F%E3%83%8F%E3%83%AB%E3%82%B3%E3%81%AF%E8%A1%8C%E6%96%B9%E4%B8%8D%E6%98%8E%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Japanese Girls Never Die",
-    "slug": "japanese-girls-never-die-2016"
+    "slug": "japanese-girls-never-die-2016",
+    "director": "松居大悟",
+    "genre": [
+      "ドラマ",
+      "サスペンス"
+    ],
+    "music": {
+      "composer": [
+        "環ROY"
+      ],
+      "artists": [
+        {
+          "name": "チャットモンチー",
+          "song": "消えない星",
+          "role": "主題歌"
+        }
+      ]
+    }
   },
   {
     "n": 2736,
@@ -1013,7 +1146,23 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%B7%E3%83%B3%E3%83%87%E3%83%AC%E3%83%A9%E3%82%B2%E3%83%BC%E3%83%A0%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Cinderella Game",
-    "slug": "cinderella-game"
+    "slug": "cinderella-game",
+    "director": "加納隼",
+    "genre": [
+      "ホラー",
+      "サスペンス"
+    ],
+    "music": {
+      "composer": null,
+      "artists": [
+        {
+          "name": "清遠捺姫",
+          "song": "名前のない小さな闇",
+          "role": "主題歌"
+        }
+      ]
+    },
+    "backfill_note": "composer_unverified"
   },
   {
     "n": 164,
@@ -1119,7 +1268,18 @@
     "y": "https://www.youtube.com/results?search_query=%E4%BA%8C%E9%87%8D%E7%94%9F%E6%B4%BB%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "ni-ju-seikatsu"
+    "slug": "ni-ju-seikatsu",
+    "director": "岸善幸",
+    "genre": [
+      "サスペンス",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "岩代太郎"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 176,
@@ -1365,7 +1525,17 @@
     "y": "https://www.youtube.com/results?search_query=%E5%B0%91%E6%9E%97%E5%AF%BA%E6%8B%B3%E6%B3%95%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": null,
-    "slug": "shorinjikempo"
+    "slug": "shorinjikempo",
+    "director": "鈴木則文",
+    "genre": [
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "鏑木創"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 200,
@@ -1615,7 +1785,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%A1%E3%82%A4%E3%82%BA%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "The Maze Runner",
-    "slug": "the-maze-runner-2014"
+    "slug": "the-maze-runner-2014",
+    "director": "ウェス・ボール",
+    "genre": [
+      "SF",
+      "アクション",
+      "アドベンチャー"
+    ],
+    "music": {
+      "composer": [
+        "ジョン・パエサーノ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 234,
@@ -1671,7 +1853,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%A1%E3%82%A4%E3%82%BA%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%202%20%E7%A0%82%E6%BC%A0%E3%81%AE%E8%BF%B7%E5%AE%AE%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Maze Runner: The Scorch Trials",
-    "slug": "maze-runner-the-scorch-trials-2015"
+    "slug": "maze-runner-the-scorch-trials-2015",
+    "director": "ウェス・ボール",
+    "genre": [
+      "SF",
+      "アクション",
+      "アドベンチャー"
+    ],
+    "music": {
+      "composer": [
+        "ジョン・パエサーノ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 240,
@@ -1888,7 +2082,18 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%AA%E3%83%96%E3%83%AA%E3%83%93%E3%82%AA%E3%83%B3%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Oblivion",
-    "slug": "oblivion-2013"
+    "slug": "oblivion-2013",
+    "director": "ジョゼフ・コシンスキー",
+    "genre": [
+      "SF",
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "M83"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 263,
@@ -2164,7 +2369,18 @@
     "y": "https://www.youtube.com/results?search_query=%E3%82%BB%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Whiplash",
-    "slug": "whiplash-2014"
+    "slug": "whiplash-2014",
+    "director": "デミアン・チャゼル",
+    "genre": [
+      "ドラマ",
+      "音楽・ミュージカル"
+    ],
+    "music": {
+      "composer": [
+        "ジャスティン・ハーウィッツ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 304,
@@ -3105,7 +3321,18 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%8E%E3%83%BC%E3%83%BB%E3%82%A8%E3%82%B9%E3%82%B1%E3%83%BC%E3%83%97%20%E8%87%AA%E7%94%B1%E3%81%B8%E3%81%AE%E5%9B%BD%E5%A2%83%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Desierto",
-    "slug": "desierto-2015"
+    "slug": "desierto-2015",
+    "director": "ホナス・クアロン",
+    "genre": [
+      "サスペンス",
+      "アクション"
+    ],
+    "music": {
+      "composer": [
+        "Woodkid"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 424,
@@ -4057,7 +4284,19 @@
     "y": "https://www.youtube.com/results?search_query=Knight%20and%20Day%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Knight and Day",
-    "slug": "knight-and-day-2010"
+    "slug": "knight-and-day-2010",
+    "director": "ジェームズ・マンゴールド",
+    "genre": [
+      "アクション",
+      "コメディ",
+      "ロマンス"
+    ],
+    "music": {
+      "composer": [
+        "ジョン・パウエル"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 570,
@@ -12287,7 +12526,19 @@
     "y": "https://www.youtube.com/results?search_query=%E3%83%8F%E3%83%9F%E3%83%B3%E3%82%B0%E3%83%90%E3%83%BC%E3%83%89%20%E4%BA%88%E5%91%8A",
     "yt": "s",
     "english_title": "Redemption",
-    "slug": "redemption-2013"
+    "slug": "redemption-2013",
+    "director": "スティーヴン・ナイト",
+    "genre": [
+      "アクション",
+      "クライム",
+      "ドラマ"
+    ],
+    "music": {
+      "composer": [
+        "ダリオ・マリアネッリ"
+      ],
+      "artists": []
+    }
   },
   {
     "n": 1524,

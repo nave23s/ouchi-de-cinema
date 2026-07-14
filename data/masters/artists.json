@@ -101,6 +101,30 @@
       "name_en": "Hayato Kadono",
       "slug": "kadono-hayato",
       "aliases": []
+    },
+    {
+      "name": "チャットモンチー",
+      "name_en": "Chatmonchy",
+      "slug": "chatmonchy",
+      "aliases": []
+    },
+    {
+      "name": "NICO Touches the Walls",
+      "name_en": "NICO Touches the Walls",
+      "slug": "nico-touches-the-walls",
+      "aliases": []
+    },
+    {
+      "name": "ドレスコーズ",
+      "name_en": "the dresscodes",
+      "slug": "the-dresscodes",
+      "aliases": []
+    },
+    {
+      "name": "清遠捺姫",
+      "name_en": "Kiyoto Natoki",
+      "slug": "kiyoto-natoki",
+      "aliases": []
     }
   ]
 }
