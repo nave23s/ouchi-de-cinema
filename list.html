@@ -215,10 +215,14 @@ let currentGenre = '';
 const PER = 30;
 
 // お手本6本は /movies/[番号]/、slugがある作品は /movies/[slug]/、それ以外は未公開
+// B判定（レビュー200字未満）はリンク化しない
 const SKIP_N = new Set([303, 101, 2176, 2719, 1239, 1100]);
+function reviewLen(d) {
+  return (d || '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, '').length;
+}
 function moviePath(m) {
   if (SKIP_N.has(m.n)) return `/movies/${m.n}/`;
-  if (m.slug) return `/movies/${m.slug}/`;
+  if (m.slug && reviewLen(m.d) >= 200) return `/movies/${m.slug}/`;
   return null;
 }
 

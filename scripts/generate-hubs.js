@@ -77,6 +77,11 @@ const GENRE_FAQ = {
   ],
 };
 
+function reviewLen(d) {
+  if (!d) return 0;
+  return d.replace(/https?:\/\/\S+/g, '').replace(/\s+/g, '').length;
+}
+
 function esc(s) {
   if (s == null) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -199,7 +204,7 @@ function main() {
 
   for (const genre of TARGETS) {
     const slug  = GENRE_SLUG[genre];
-    const works = movies.filter(m => m.slug && m.genre && m.genre.includes(genre))
+    const works = movies.filter(m => m.slug && m.genre && m.genre.includes(genre) && reviewLen(m.d) >= 200)
                         .sort((a, b) => (a.year || 0) - (b.year || 0));
 
     if (works.length < MIN_WORKS) {

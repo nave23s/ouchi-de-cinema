@@ -14,7 +14,13 @@ const publishList = JSON.parse(fs.readFileSync(path.join(ROOT, 'publish_list.jso
 const movies      = JSON.parse(fs.readFileSync(path.join(ROOT, 'movies.json'), 'utf8'));
 const plSet       = new Set(publishList.map(e => `${e.n}_${e.t}`));
 
-const withSlug = movies.filter(m => m.slug && plSet.has(`${m.n}_${m.t}`));
+function reviewLen(d) {
+  if (!d) return 0;
+  return d.replace(/https?:\/\/\S+/g, '').replace(/\s+/g, '').length;
+}
+
+// A判定(200字以上)のみsitemapに含める
+const withSlug = movies.filter(m => m.slug && plSet.has(`${m.n}_${m.t}`) && reviewLen(m.d) >= 200);
 
 const urls = [];
 

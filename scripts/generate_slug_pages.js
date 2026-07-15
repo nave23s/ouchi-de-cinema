@@ -30,6 +30,12 @@ function amazonSoundtrackUrl(title) {
   return `https://www.amazon.co.jp/s?k=${encodeURIComponent(title + ' サウンドトラック')}&tag=${AFFILIATE_ID}`;
 }
 
+// レビュー実質文字数（URL除去後）
+function reviewLen(d) {
+  if (!d) return 0;
+  return d.replace(/https?:\/\/\S+/g, '').replace(/\s+/g, '').length;
+}
+
 // dフィールドのテキストをHTML段落に変換（URL行を除去）
 function formatReview(d) {
   if (!d) return '<p>（レビュー準備中）</p>';
@@ -158,7 +164,7 @@ function generateHtml(movie, seriesEpisodes = []) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>${esc(titleTag)}</title>
 <meta name="description" content="${esc(desc)}">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="robots" content="${reviewLen(d) >= 200 ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow'}">
 <link rel="canonical" href="${pageUrl}">
 
 <meta property="og:type"        content="article">
