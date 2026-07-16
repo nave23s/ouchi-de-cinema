@@ -246,7 +246,13 @@ const GENRE_PATTERNS = {
 fetch('movies.json')
   .then(r => r.json())
   .then(data => {
-    MOVIES = data.filter(m => !m.h); // 非表示作品を除外
+    // 非表示作品 + B判定（slug付き・200字未満）を除外
+    MOVIES = data.filter(m => {
+      if (m.h) return false;
+      const rl = (m.d || '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, '').length;
+      if (m.slug && rl < 200 && !SKIP_N.has(m.n)) return false;
+      return true;
+    });
     filtered = [...MOVIES].reverse();
     checkURL();
   })

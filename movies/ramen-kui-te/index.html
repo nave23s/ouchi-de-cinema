@@ -83,6 +83,11 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .music-pending-icon { font-size:36px; margin-bottom:12px; }
 .music-pending-title { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.15em; color:var(--dim); margin-bottom:8px; text-transform:uppercase; }
 .music-pending-text { font-size:13px; color:var(--dim); line-height:1.8; }
+.music-card { background:var(--s1); border:1px solid var(--bd); border-radius:14px; padding:22px 26px 18px; }
+.music-dl { display:grid; grid-template-columns:5em 1fr; gap:6px 12px; align-items:baseline; }
+.music-dt { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); letter-spacing:.08em; }
+.music-dd { font-size:14px; color:var(--sub); line-height:1.8; }
+.music-amz-link { display:inline-block; margin-top:14px; font-size:12px; color:var(--gold); text-decoration:underline; text-underline-offset:3px; }
 .trailer-btn { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,rgba(192,140,40,.1),rgba(192,140,40,.04)); border:1px solid rgba(192,140,40,.3); border-radius:13px; padding:18px 20px; color:var(--gold); transition:all .2s; }
 .trailer-btn:hover { background:rgba(192,140,40,.16); transform:translateY(-2px); }
 .trailer-play { width:40px; height:40px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; flex-shrink:0; }
@@ -154,6 +159,7 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
     <div class="hero-meta">
       <span class="tag">映画</span>
       <span class="tag">レビュー</span>
+      
     </div>
   </div>
 </header>
@@ -169,32 +175,7 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
     </div>
   </section>
 
-  <!-- 音楽・音セクション（準備中） -->
-  <section class="section">
-    <div class="sec-label sec-label-gold">Music &amp; Sound</div>
-    <div class="music-pending">
-      <div class="music-pending-icon">♪</div>
-      <div class="music-pending-title">Music Review — Coming Soon</div>
-      <p class="music-pending-text">
-        音楽・サウンドの詳細レビューを準備中です。<br>
-        作曲家・印象的なシーン・サウンドトラック情報を近日公開予定。
-      </p>
-    </div>
-  </section>
-
-  <!-- 予告編 -->
-  <section class="section">
-    <div class="sec-label">Trailer</div>
-    <a href="https://www.youtube.com/results?search_query=%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E9%A3%9F%E3%81%84%E3%81%A6%E3%81%87%EF%BC%81%20%E4%BA%88%E5%91%8A" target="_blank" rel="noopener" class="trailer-btn">
-      <span class="trailer-play">▶</span>
-      <div class="trailer-text">
-        『ラーメン食いてぇ！』の予告編を観る
-        <div class="trailer-sub">YouTube で検索して開きます</div>
-      </div>
-    </a>
-  </section>
-
-  <!-- VOD -->
+  <!-- VOD — レビュー直後に配置（観る意欲が高い瞬間に誘導） -->
   <section class="section">
     <div class="sec-label">Watch Now — どこで観れる？</div>
     <div class="vod-grid">
@@ -247,6 +228,31 @@ footer { background:var(--s1); border-top:1px solid var(--bd); padding:32px 18px
         <span class="amz-action">→</span>
       </a>
     </div>
+  </section>
+
+  <!-- 音楽・音セクション -->
+  <section class="section">
+    <div class="sec-label sec-label-gold">Music &amp; Sound</div>
+    <div class="music-pending">
+      <div class="music-pending-icon">♪</div>
+      <div class="music-pending-title">Music Review — Coming Soon</div>
+      <p class="music-pending-text">
+        音楽・サウンドの詳細レビューを準備中です。<br>
+        作曲家・印象的なシーン・サウンドトラック情報を近日公開予定。
+      </p>
+    </div>
+  </section>
+
+  <!-- 予告編 -->
+  <section class="section">
+    <div class="sec-label">Trailer</div>
+    <a href="https://www.youtube.com/results?search_query=%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E9%A3%9F%E3%81%84%E3%81%A6%E3%81%87%EF%BC%81%20%E4%BA%88%E5%91%8A" target="_blank" rel="noopener" class="trailer-btn">
+      <span class="trailer-play">▶</span>
+      <div class="trailer-text">
+        『ラーメン食いてぇ！』の予告編を観る
+        <div class="trailer-sub">YouTube で検索して開きます</div>
+      </div>
+    </a>
   </section>
 
 

@@ -325,25 +325,7 @@ ${reviewHtml}
     </div>
   </section>
 
-  <!-- 音楽・音セクション -->
-  <section class="section">
-    <div class="sec-label sec-label-gold">Music &amp; Sound</div>
-${musicHtml}
-  </section>
-
-  <!-- 予告編 -->
-  <section class="section">
-    <div class="sec-label">Trailer</div>
-    <a href="${esc(trailerUrl)}" target="_blank" rel="noopener" class="trailer-btn">
-      <span class="trailer-play">▶</span>
-      <div class="trailer-text">
-        『${esc(jaTitle)}』の予告編を観る
-        <div class="trailer-sub">YouTube で検索して開きます</div>
-      </div>
-    </a>
-  </section>
-
-  <!-- VOD -->
+  <!-- VOD — レビュー直後に配置（観る意欲が高い瞬間に誘導） -->
   <section class="section">
     <div class="sec-label">Watch Now — どこで観れる？</div>
     <div class="vod-grid">
@@ -398,6 +380,24 @@ ${musicHtml}
     </div>
   </section>
 
+  <!-- 音楽・音セクション -->
+  <section class="section">
+    <div class="sec-label sec-label-gold">Music &amp; Sound</div>
+${musicHtml}
+  </section>
+
+  <!-- 予告編 -->
+  <section class="section">
+    <div class="sec-label">Trailer</div>
+    <a href="${esc(trailerUrl)}" target="_blank" rel="noopener" class="trailer-btn">
+      <span class="trailer-play">▶</span>
+      <div class="trailer-text">
+        『${esc(jaTitle)}』の予告編を観る
+        <div class="trailer-sub">YouTube で検索して開きます</div>
+      </div>
+    </a>
+  </section>
+
 ${seriesNavHtml}
 
   <!-- ページナビ -->
@@ -446,11 +446,13 @@ function main() {
   let generated = 0;
   let skipped   = 0;
 
+  const forceRegen = process.argv.includes('--force');
+
   for (const movie of targets) {
     const dir = path.join(ROOT, 'movies', movie.slug);
     const file = path.join(dir, 'index.html');
 
-    if (fs.existsSync(file)) {
+    if (!forceRegen && fs.existsSync(file)) {
       skipped++;
       continue;
     }
