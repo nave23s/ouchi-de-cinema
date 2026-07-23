@@ -134,12 +134,20 @@ function buildVodSection(jaTitle) {
   const btnHtml = services.map(svc => {
     const wideClass  = svc.wide ? ' vod-btn-wide' : '';
     const badgeHtml  = svc.badge ? `\n        <span class="vod-badge">${esc(svc.badge)}</span>` : '';
+    const action = esc(svc.action || 'で観る →');
     return `      <a href="${esc(svc.url)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn${wideClass}">
         <span class="vod-icon ${esc(svc.iconClass)}">${esc(svc.icon)}</span>
         <span class="vod-name">${esc(svc.name)}</span>${badgeHtml}
-        <span class="vod-action">で観る →</span>
+        <span class="vod-action">${action}</span>
       </a>`;
   }).join('\n');
+  const trackingPixels = services
+    .filter(svc => svc.tracking)
+    .map(svc => `      ${svc.tracking}`)
+    .join('\n');
+  const trackingHtml = trackingPixels
+    ? `\n    <div class="vod-tracking" aria-hidden="true">\n${trackingPixels}\n    </div>`
+    : '';
   const primeUrl      = amazonPrimeUrl(jaTitle);
   const blurayUrl     = amazonBlurayUrl(jaTitle);
   const soundtrackUrl = amazonSoundtrackUrl(jaTitle);
@@ -149,7 +157,7 @@ function buildVodSection(jaTitle) {
     <p class="vod-pr-note">PR</p>
     <div class="vod-grid">
 ${btnHtml}
-    </div>
+    </div>${trackingHtml}
   </section>
 
   <!-- Amazon アフィリエイト -->
@@ -299,6 +307,7 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .vod-icon-abema   { background:linear-gradient(135deg,#fff,#e2f6fa); border-color:#00b4d8; }
 .vod-btn-wide { grid-column:1 / -1; }
 .vod-pr-note { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--dim); letter-spacing:.12em; margin-bottom:8px; text-align:right; }
+.vod-tracking { font-size:0; line-height:0; height:1px; overflow:hidden; }
 .vod-badge { font-size:9px; padding:2px 7px; border-radius:8px; background:rgba(212,52,31,.12); color:#d4341f; border:1px solid rgba(212,52,31,.3); font-family:'JetBrains Mono',monospace; letter-spacing:.05em; white-space:nowrap; }
 .vod-name { font-size:12px; font-weight:600; color:var(--tx); flex:1; }
 .vod-action { font-size:10px; color:var(--dim); white-space:nowrap; }
