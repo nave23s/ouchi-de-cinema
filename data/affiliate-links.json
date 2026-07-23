@@ -1,0 +1,55 @@
+{
+  "_note": "VODアフィリエイトリンク一元管理。URLを差し替えるだけで全スラッグページに反映。並び順=報酬単価順",
+  "services": [
+    {
+      "key": "hulu",
+      "name": "Hulu",
+      "url": "PLACEHOLDER_HULU_AFB_URL",
+      "asp": "afb",
+      "icon": "H",
+      "iconClass": "vod-icon-hulu",
+      "badge": null,
+      "wide": false
+    },
+    {
+      "key": "crankin",
+      "name": "クランクイン!ビデオ",
+      "url": "https://t.afi-b.com/visit.php?a=Q16300l-E524044z&p=09852565",
+      "asp": "afb",
+      "icon": "ク",
+      "iconClass": "vod-icon-crankin",
+      "badge": "新作に強い",
+      "wide": false
+    },
+    {
+      "key": "wowow",
+      "name": "WOWOWオンデマンド",
+      "url": "PLACEHOLDER_WOWOW_A8_URL",
+      "asp": "A8",
+      "icon": "W",
+      "iconClass": "vod-icon-wowow",
+      "badge": null,
+      "wide": false
+    },
+    {
+      "key": "tsutaya",
+      "name": "TSUTAYA DISCAS",
+      "url": "PLACEHOLDER_TSUTAYA_A8_URL",
+      "asp": "A8",
+      "icon": "T",
+      "iconClass": "vod-icon-tsutaya",
+      "badge": null,
+      "wide": false
+    },
+    {
+      "key": "abema",
+      "name": "ABEMAプレミアム",
+      "url": "PLACEHOLDER_ABEMA_A8_URL",
+      "asp": "A8",
+      "icon": "A",
+      "iconClass": "vod-icon-abema",
+      "badge": null,
+      "wide": true
+    }
+  ]
+}

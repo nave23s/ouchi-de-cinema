@@ -5,10 +5,10 @@
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT         = path.resolve(__dirname, '..');
-const AFFILIATE_ID = 'ouchidecinama-22';
-const CRANKIN_URL  = 'https://t.afi-b.com/visit.php?a=Q16300l-E524044z&p=09852565';
-const SKIP_N       = new Set([303, 101, 2176, 2719, 1239, 1100]);
+const ROOT          = path.resolve(__dirname, '..');
+const AFFILIATE_ID  = 'ouchidecinama-22';
+const SKIP_N        = new Set([303, 101, 2176, 2719, 1239, 1100]);
+const AFFILIATE_LINKS = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'affiliate-links.json'), 'utf8'));
 
 function esc(s) {
   if (s == null) return '';
@@ -129,6 +129,52 @@ ${rows}      </dl>
     </div>`;
 }
 
+function buildVodSection(jaTitle) {
+  const services = AFFILIATE_LINKS.services;
+  const btnHtml = services.map(svc => {
+    const wideClass  = svc.wide ? ' vod-btn-wide' : '';
+    const badgeHtml  = svc.badge ? `\n        <span class="vod-badge">${esc(svc.badge)}</span>` : '';
+    return `      <a href="${esc(svc.url)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn${wideClass}">
+        <span class="vod-icon ${esc(svc.iconClass)}">${esc(svc.icon)}</span>
+        <span class="vod-name">${esc(svc.name)}</span>${badgeHtml}
+        <span class="vod-action">で観る →</span>
+      </a>`;
+  }).join('\n');
+  const primeUrl      = amazonPrimeUrl(jaTitle);
+  const blurayUrl     = amazonBlurayUrl(jaTitle);
+  const soundtrackUrl = amazonSoundtrackUrl(jaTitle);
+  return `  <!-- VOD — レビュー直後に配置（観る意欲が高い瞬間に誘導） -->
+  <section class="section">
+    <div class="sec-label">Watch Now — この映画を観るなら</div>
+    <p class="vod-pr-note">PR</p>
+    <div class="vod-grid">
+${btnHtml}
+    </div>
+  </section>
+
+  <!-- Amazon アフィリエイト -->
+  <section class="section">
+    <div class="sec-label">Amazon で探す</div>
+    <div class="amazon-grid">
+      <a href="${esc(primeUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
+        <span class="amz-icon">▶</span>
+        <span class="amz-name">Prime Video<br>で観る</span>
+        <span class="amz-action">→</span>
+      </a>
+      <a href="${esc(blurayUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
+        <span class="amz-icon">📀</span>
+        <span class="amz-name">Blu-ray / DVD<br>を探す</span>
+        <span class="amz-action">→</span>
+      </a>
+      <a href="${esc(soundtrackUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
+        <span class="amz-icon">🎵</span>
+        <span class="amz-name">サウンドトラック<br>を探す</span>
+        <span class="amz-action">→</span>
+      </a>
+    </div>
+  </section>`;
+}
+
 function generateHtml(movie, seriesEpisodes = []) {
   const { n, t, d, y, english_title, slug, genre, music } = movie;
   const jaTitle  = t;
@@ -140,8 +186,6 @@ function generateHtml(movie, seriesEpisodes = []) {
 
   const reviewHtml    = formatReview(d);
   const trailerUrl    = y || `https://www.youtube.com/results?search_query=${encodeURIComponent(jaTitle + ' 予告')}`;
-  const primeUrl      = amazonPrimeUrl(jaTitle);
-  const blurayUrl     = amazonBlurayUrl(jaTitle);
   const soundtrackUrl = amazonSoundtrackUrl(jaTitle);
   const seriesNavHtml = seriesEpisodes.length >= 2 ? buildSeriesNav(movie, seriesEpisodes) : '';
   const genreTags     = (genre && genre.length > 0)
@@ -248,12 +292,13 @@ main { max-width:760px; margin:0 auto; padding:0 18px 80px; }
 .vod-btn { display:flex; align-items:center; gap:10px; background:var(--s1); border:1px solid var(--bd); border-radius:11px; padding:14px 14px; transition:all .2s; }
 .vod-btn:hover { background:var(--s2); border-color:var(--bd2); transform:translateY(-2px); }
 .vod-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:var(--gold); flex-shrink:0; border:2px solid; }
-.vod-icon-unext   { background:linear-gradient(135deg,#fff,#ececec); border-color:#000; }
-.vod-icon-netflix { background:linear-gradient(135deg,#fff,#fbe4e2); border-color:#e50914; }
 .vod-icon-hulu    { background:linear-gradient(135deg,#fff,#e2f4ea); border-color:#10b35f; }
-.vod-icon-prime   { background:linear-gradient(135deg,#fff,#e1f0fa); border-color:#1f9fe5; }
 .vod-icon-crankin { background:linear-gradient(135deg,#fff,#fbe4e0); border-color:#d4341f; }
+.vod-icon-wowow   { background:linear-gradient(135deg,#fff,#e8ecfa); border-color:#1428a0; }
+.vod-icon-tsutaya { background:linear-gradient(135deg,#fff,#fae8e8); border-color:#990000; }
+.vod-icon-abema   { background:linear-gradient(135deg,#fff,#e2f6fa); border-color:#00b4d8; }
 .vod-btn-wide { grid-column:1 / -1; }
+.vod-pr-note { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--dim); letter-spacing:.12em; margin-bottom:8px; text-align:right; }
 .vod-badge { font-size:9px; padding:2px 7px; border-radius:8px; background:rgba(212,52,31,.12); color:#d4341f; border:1px solid rgba(212,52,31,.3); font-family:'JetBrains Mono',monospace; letter-spacing:.05em; white-space:nowrap; }
 .vod-name { font-size:12px; font-weight:600; color:var(--tx); flex:1; }
 .vod-action { font-size:10px; color:var(--dim); white-space:nowrap; }
@@ -325,60 +370,7 @@ ${reviewHtml}
     </div>
   </section>
 
-  <!-- VOD — レビュー直後に配置（観る意欲が高い瞬間に誘導） -->
-  <section class="section">
-    <div class="sec-label">Watch Now — どこで観れる？</div>
-    <div class="vod-grid">
-      <a href="https://video.unext.jp/search?query=${encodeURIComponent(jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon vod-icon-unext">U</span>
-        <span class="vod-name">U-NEXT</span>
-        <span class="vod-action">で観る →</span>
-      </a>
-      <a href="${esc(primeUrl)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon vod-icon-prime">P</span>
-        <span class="vod-name">Amazon Prime</span>
-        <span class="vod-action">で観る →</span>
-      </a>
-      <a href="https://www.netflix.com/search?q=${encodeURIComponent(enTitle || jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon vod-icon-netflix">N</span>
-        <span class="vod-name">Netflix</span>
-        <span class="vod-action">で観る →</span>
-      </a>
-      <a href="https://www.hulu.jp/search?q=${encodeURIComponent(jaTitle)}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn">
-        <span class="vod-icon vod-icon-hulu">H</span>
-        <span class="vod-name">Hulu</span>
-        <span class="vod-action">で観る →</span>
-      </a>
-      <a href="${CRANKIN_URL}" target="_blank" rel="noopener nofollow sponsored" class="vod-btn vod-btn-wide">
-        <span class="vod-icon vod-icon-crankin">ク</span>
-        <span class="vod-name">クランクインビデオ</span>
-        <span class="vod-badge">新作に強い</span>
-        <span class="vod-action">で観る →</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Amazon アフィリエイト -->
-  <section class="section">
-    <div class="sec-label">Amazon で探す</div>
-    <div class="amazon-grid">
-      <a href="${esc(primeUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
-        <span class="amz-icon">▶</span>
-        <span class="amz-name">Prime Video<br>で観る</span>
-        <span class="amz-action">→</span>
-      </a>
-      <a href="${esc(blurayUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
-        <span class="amz-icon">📀</span>
-        <span class="amz-name">Blu-ray / DVD<br>を探す</span>
-        <span class="amz-action">→</span>
-      </a>
-      <a href="${esc(soundtrackUrl)}" target="_blank" rel="noopener nofollow sponsored" class="amz-btn">
-        <span class="amz-icon">🎵</span>
-        <span class="amz-name">サウンドトラック<br>を探す</span>
-        <span class="amz-action">→</span>
-      </a>
-    </div>
-  </section>
+${buildVodSection(jaTitle)}
 
   <!-- 音楽・音セクション -->
   <section class="section">
