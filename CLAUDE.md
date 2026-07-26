@@ -93,9 +93,9 @@
 
 **鉄則：既存フィールドの改名は絶対にしない。新情報は新フィールドとして追加する。**
 
-## 現状（2026-07-10時点）
+## 現状（2026-07-26時点）
 
-- 公開：811本（slug付き）
+- 公開：789本（slug付き・publish_list収録確認済み）
 - データ：movies.json（2489件）。各エントリ `{n,t,d,s,y,yt,english_title,slug}`（シリーズものは `series`,`episode` フィールドも付与）
 - 著者本人の長文レビュー14本を公開済み（n=2720〜2730等）
 - サイトの数字は「3,000本以上」に統一、Aboutを書き手プロフィールに変更済み
@@ -109,11 +109,13 @@
 - **アイアン・シェフ ブラジル編 全8話を公開**（シリーズもの公開のモデルケース）
 - series_pending分の話数確定：DR.STONE 4件、ブルーロック 2件、ストリートグルメ サルバドール編=S1E2
 - **データ埋め戻し開始**：backfill-dataスキルで第1〜3バッチ（計31件）にdirector/genre/musicを追加。マスター：composers.json 23名・artists.json 9名
-- **スキル体系整備（計9スキル）**：affiliate-insert / backfill-data / batch-generate / hub-generate / import-reviews / json-guard / new-site / seo-fix / site-audit
+- **スキル体系整備（計11スキル）**：affiliate-audit / affiliate-insert / analytics-report / backfill-data / batch-generate / hub-generate / import-reviews / json-guard / new-site / seo-fix / site-audit
 - **json-guardスキル新設**：movies.jsonのバックアップ（backups/フォルダ、.gitignore済み）と整合性チェック
 - **site-auditスキル新設**：サイト全体健康診断。初回実行で欠落4件・YouTube URL異常3件を検出
 - **audit対応**：欠落4ページ（almost-famous-2000等）を生成、yt修正（n=2724/2728を"s"→"d"）
 - **お手本4本slug版統合完了**（2026-07-10）：n=101/303/1100/2176のslug版に数値版のカスタムtitle・music-wrapperコンテンツを移植。canonicalの応急処置を解消し、slug版を正規URL（自己参照canonical）に確定。site-audit再実行で全782件のcanonical自己参照OK・重大ゼロを確認
+- **VODアフィリエイト全789ページ配備完了**（2026-07-26）：Hulu/クランクイン!ビデオ/WOWOWオンデマンド/TSUTAYA DISCAS/ABEMAの5サービスを全slug版に一括配備。`data/affiliate-links.json`で一元管理し`buildVodSection()`でテンプレート自動生成。PR表記（ステマ規制対応）・rel="noopener nofollow sponsored"・afb 1x1計測画像を全ページに付与
+- **affiliate-auditスキル新設**（2026-07-26）：全公開ページ×6種リンク（Amazon/Hulu/クランクイン/WOWOW/TSUTAYA/ABEMA）の網羅監査。プログラムID基準（Hulu=G8792C、クランクイン=Q16300l、各A8 a8mat値）の厳密判定。初回監査：789ページ全件100%配備・タグ不備ゼロを確認。`affiliate-report.md` + `affiliate-matrix.csv` 出力済み
 
 ## シリーズもの標準公開手順（アイアン・シェフ方式）
 
@@ -127,9 +129,11 @@
 1. **スキル整備の続き**：bear-import等、未作成スキルの追加整備（未作成約9個）。または他業務フォルダの立ち上げ
 
 ### 保留中
-2. **n=1409 幽霊エントリー**：t/d/yがすべて空。削除または補完の判断待ち
-3. **n=2720 yフィールド調査**：VideoMarket URLが誤入力されている（yt="s"なのに全く別サービスのURL）。正しいYouTube URLを確認して修正
-4. **レガシー71件（数値URLページ）**：うち4件はslug版統合済み（101/303/1100/2176）、残り67件はslug未付与。typeb-migrateとして今後整理
+2. **Hulu規約問題（要設計）**：全789ページに一律Hulu掲載しているが、Hulu規約は「配信中作品のみ訴求可」のため非配信作品のページに掲載すると規約違反の可能性。配信状況を確認して非配信ページからHuluバナーを外す運用（vod_services フィールドでの個別管理、または定期スクリプト化）の設計が必要
+3. **Hulu計測コード差異の確認**：実HTMLに埋め込まれているコード `V358768M` と afb管理画面で最新発行されている可能性があるコード `u506241i` の差異をafb管理画面で確認。有効なコードはどちらか確認し、必要なら全ページ再生成
+4. **n=1409 幽霊エントリー**：t/d/yがすべて空。削除または補完の判断待ち
+5. **n=2720 yフィールド調査**：VideoMarket URLが誤入力されている（yt="s"なのに全く別サービスのURL）。正しいYouTube URLを確認して修正
+6. **レガシー71件（数値URLページ）**：うち4件はslug版統合済み（101/303/1100/2176）、残り67件はslug未付与。typeb-migrateとして今後整理
 
 ### 中期
 5. 大型シリーズの全話マスターリスト作成（DR.STONE、ブルーロック等）
